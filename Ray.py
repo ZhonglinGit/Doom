@@ -22,7 +22,7 @@ class Map():
                     [1,0,1,0,0,0,1,1],
                     [1,0,0,0,0,0,0,1],
                     [1,1,1,1,1,1,1,1],]
-        self.space = 30
+        self.space = 60
         self.width = len(self.map[0])
         self.height = len(self.map)
     
@@ -37,7 +37,7 @@ class player():
         self.x = 4 * 30
         self.y = 4 * 30
         self.angle = 0
-        self.viewDis = 120
+        self.viewDis = 240
         self.fieldOfView = 60  # degrees
         self.deltaAngle = self.fieldOfView / WIDTH  # degrees per ray
         self.speed =  5
@@ -111,7 +111,7 @@ class Game:
 
             # for move side way
             dRightX = self.player.speed * math.cos(math.radians(self.player.angle + 90))
-            dRightY = self.player.speed * math.cos(math.radians(self.player.angle + 90))
+            dRightY = self.player.speed * math.sin(math.radians(self.player.angle + 90))
 
             # back
             if keys[pygame.K_s]:
@@ -122,7 +122,7 @@ class Game:
                 
                 self.player.y -= dy
                 if not self.canYouMove(self.player.x,self.player.y ):
-                    self.player.x += dy
+                    self.player.y += dy
 
 
             # forward
@@ -134,17 +134,31 @@ class Game:
 
                 self.player.y += dy
                 if not self.canYouMove(self.player.x,self.player.y ):
-                    self.player.x -= dy
+                    self.player.y -= dy
 
 
             if keys[pygame.K_d]:
+                # y 
                 self.player.y += dRightY
-                
+                if not self.canYouMove(self.player.x, self.player.y):
+                    self.player.y -= dRightY
+ 
+                # x
                 self.player.x += dRightX
+                if not self.canYouMove(self.player.x, self.player.y):
+                    self.player.x -= dRightX
 
             if keys[pygame.K_a]:
+                #y
                 self.player.y -= dRightY
+                if not self.canYouMove(self.player.x, self.player.y):
+                    self.player.y -= dRightY
+
+                #X
                 self.player.x -= dRightX
+                if not self.canYouMove(self.player.x, self.player.y):
+                    self.player.x -= dRightX
+
             if keys[pygame.K_LEFT]:
                 self.player.angle -= self.player.Aspeed
             if keys[pygame.K_RIGHT]:
