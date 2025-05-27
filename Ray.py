@@ -37,10 +37,10 @@ class player():
         self.x = 4 * 30
         self.y = 4 * 30
         self.angle = 0
-        self.viewDis = 240
+        self.viewDis = 360
         self.fieldOfView = 60  # degrees
         self.deltaAngle = self.fieldOfView / WIDTH  # degrees per ray
-        self.speed =  5
+        self.speed =  3
         self.Aspeed = 2
 
 
@@ -49,25 +49,7 @@ class Game:
         self.map = Map()
         self.player = player()
 
-    def main(self):
-
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                
-
-            self.inputMove()
-
-
-            screen.fill((0, 0, 0))
-            self.drawRays(self.player, self.map)
-
-            pygame.display.flip()
-            clock.tick(60)
-
-        pygame.quit()
+   
     def getDep(self, angle, map, player):
         xcomp =  math.cos(math.radians(angle))
         ycomp = math.sin(math.radians(angle))
@@ -78,6 +60,7 @@ class Game:
 
             mapX = int(x / map.space)
             mapY = int(y / map.space)
+
 
             if map.map[mapY][mapX] == 1:
                 return i
@@ -98,9 +81,11 @@ class Game:
     def canYouMove(self, x, y):
         mapX = int(x / self.map.space)
         mapY = int(y / self.map.space)
-
+        
+      
         if self.map.map[mapY][mapX] == 1:
             return False
+
         return True
 
         
@@ -152,20 +137,36 @@ class Game:
                 #y
                 self.player.y -= dRightY
                 if not self.canYouMove(self.player.x, self.player.y):
-                    self.player.y -= dRightY
+                    self.player.y += dRightY
 
                 #X
                 self.player.x -= dRightX
                 if not self.canYouMove(self.player.x, self.player.y):
-                    self.player.x -= dRightX
+                    self.player.x += dRightX
 
-            if keys[pygame.K_LEFT]:
+            if keys[pygame.K_i]:
                 self.player.angle -= self.player.Aspeed
-            if keys[pygame.K_RIGHT]:
+            if keys[pygame.K_p]:
                 self.player.angle += self.player.Aspeed
+    def main(self):
 
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                
 
+            self.inputMove()
 
+            print(self.player.x / self.map.space, self.player.y/ self.map.space)
 
+            screen.fill((0, 0, 0))
+            self.drawRays(self.player, self.map)
+
+            pygame.display.flip()
+            clock.tick(60)
+
+        pygame.quit()
 game = Game()
 game.main()    
