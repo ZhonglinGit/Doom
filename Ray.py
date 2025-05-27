@@ -162,6 +162,7 @@ class Game:
 
             if keys[pygame.K_m]:
                 pygame.event.set_grab(False)
+                pygame.mouse.set_visible(True)
 
     def initGame(self):
         pygame.mouse.set_visible(False)
