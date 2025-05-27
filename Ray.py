@@ -151,6 +151,7 @@ class Game:
                 if not self.canYouMove(self.player.x, self.player.y):
                     self.player.x += dRightX
 
+            
             deltaPos =  pygame.mouse.get_rel()[0] 
 
             self.player.angle += deltaPos
@@ -158,8 +159,15 @@ class Game:
                 self.player.angle -= self.player.Aspeed
             if keys[pygame.K_p]:
                 self.player.angle += self.player.Aspeed
-    def main(self):
 
+            if keys[pygame.K_m]:
+                pygame.event.set_grab(False)
+
+    def initGame(self):
+        pygame.mouse.set_visible(False)
+        pygame.event.set_grab(True)
+    def main(self):
+        self.initGame()
         running = True
         while running:
             for event in pygame.event.get():
