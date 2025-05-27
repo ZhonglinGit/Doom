@@ -48,8 +48,15 @@ class Game:
     def __init__(self):
         self.map = Map()
         self.player = player()
+        self.oldMouse = 0
+        self.MouseSensitivity = 0.8
 
-   
+    
+    def getDelPos(self, oldPos):
+        pos = pygame.mouse.get_pos()
+        delPos = (pos[0] - oldPos)*0.5
+        self.delPos = delPos
+        return delPos
     def getDep(self, angle, map, player):
         xcomp =  math.cos(math.radians(angle))
         ycomp = math.sin(math.radians(angle))
@@ -144,6 +151,9 @@ class Game:
                 if not self.canYouMove(self.player.x, self.player.y):
                     self.player.x += dRightX
 
+            deltaPos =  pygame.mouse.get_rel()[0] 
+
+            self.player.angle += deltaPos
             if keys[pygame.K_i]:
                 self.player.angle -= self.player.Aspeed
             if keys[pygame.K_p]:
@@ -163,6 +173,8 @@ class Game:
 
             screen.fill((0, 0, 0))
             self.drawRays(self.player, self.map)
+
+            self.oldMouse = pygame.mouse.get_pos()
 
             pygame.display.flip()
             clock.tick(60)
