@@ -191,28 +191,27 @@ class RayCasting():
         for i in range(WIDTH):
             angle = startA + i * Player.deltaAngle
             depth = self.getDep(angle, map, Player)
-            depth *= math.cos(math.radians(angle - Player.angle))  # Correct for fish-eye effect
+            depth *= math.cos(math.radians(angle - Player.angle))  # Correct for fish-eye effect, can optomoze
             wallH = 21000 / depth
             color = -(255 / Player.viewDis) * depth + 255
             pygame.draw.line(screen, (color, 0, 0), 
                             (i, HEIGHT // 2 - wallH // 2),#start point(top)
                                 (i, HEIGHT // 2 + wallH // 2))#end of line
             
-    def didLineCross(self,startLine1, endLine1, startLine2, endLine2):
-        '''line1 should be you view, line2 should be enemy'''
+    def didLineCross(startLine1, endLine1, startLine2, endLine2):
         l2 = [endLine2[0] - startLine2[0], endLine2[1] - startLine2[1]]
         l1 = [endLine1[0] - startLine1[0], endLine1[1] - startLine1[1]]
         #line1 as base
         s1s2 = [startLine2[0] - startLine1[0],startLine2[1] - startLine1[1]]
         s1e2 = [endLine2[0] - startLine1[0], endLine2[1] - startLine1[1]]
 
-        l2CrossL1 = numpy.linalg.det(l1, s1s2) * numpy.linalg.det(l1, s1e2) <=0
+        l2CrossL1 = numpy.linalg.det(numpy.array([l1, s1s2])) * numpy.linalg.det(numpy.array([l1, s1e2])) <=0
         
         #line2 as base
         s2s1 = [startLine1[0] - startLine2[0], startLine1[1] - startLine2[1]]
-        s2e1 = [endLine1[0] - startLine2[0], endLine1[0] - startLine2[0]]
+        s2e1 = [endLine1[0] - startLine2[0], endLine1[1] - startLine2[1]]
 
-        l1CrossL2 = numpy.linalg.det(l2, s2s1) * numpy.linalg.det(l2, s2e1) <= 0
+        l1CrossL2 = numpy.linalg.det(numpy.array([l2, s2s1])) * numpy.linalg.det(numpy.array([l2, s2e1])) <= 0
         
         return l2CrossL1 and l1CrossL2
     
