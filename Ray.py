@@ -35,79 +35,14 @@ class Player():
     def __init__(self):
         self.x = 4 * 30
         self.y = 4 * 30
-        self.angle = 0
+        self.angle = 0 #with respect to the big map
         self.viewDis = 360
         self.fieldOfView = 60  # degrees
         self.deltaAngle = self.fieldOfView / WIDTH  # degrees per ray
         self.speed =  3
         self.Aspeed = 2
-    def inputMove(self):
-            keys = pygame.key.get_pressed()
-            dx = self.Player.speed * math.cos(math.radians(self.Player.angle)) # back and forth movement
-            dy = self.Player.speed * math.sin(math.radians(self.Player.angle))
-
-            # for move side way
-            dRightX = self.Player.speed * math.cos(math.radians(self.Player.angle + 90))
-            dRightY = self.Player.speed * math.sin(math.radians(self.Player.angle + 90))
-
-            # back
-            if keys[pygame.K_s]:
-                self.Player.x -= dx
-                # if you run in to a wall, undo the move
-                if not self.canYouMove(self.Player.x,self.Player.y ):
-                    self.Player.x += dx
-                
-                self.Player.y -= dy
-                if not self.canYouMove(self.Player.x,self.Player.y ):
-                    self.Player.y += dy
-
-
-            # forward
-            if keys[pygame.K_w]:
-
-                self.Player.x += dx
-                if not self.canYouMove(self.Player.x,self.Player.y ):
-                    self.Player.x -= dx
-
-                self.Player.y += dy
-                if not self.canYouMove(self.Player.x,self.Player.y ):
-                    self.Player.y -= dy
-
-
-            if keys[pygame.K_d]:
-                # y 
-                self.Player.y += dRightY
-                if not self.canYouMove(self.Player.x, self.Player.y):
-                    self.Player.y -= dRightY
- 
-                # x
-                self.Player.x += dRightX
-                if not self.canYouMove(self.Player.x, self.Player.y):
-                    self.Player.x -= dRightX
-
-            if keys[pygame.K_a]:
-                #y
-                self.Player.y -= dRightY
-                if not self.canYouMove(self.Player.x, self.Player.y):
-                    self.Player.y += dRightY
-
-                #X
-                self.Player.x -= dRightX
-                if not self.canYouMove(self.Player.x, self.Player.y):
-                    self.Player.x += dRightX
-
-            
-            deltaPos =  pygame.mouse.get_rel()[0] 
-
-            self.Player.angle += deltaPos
-            if keys[pygame.K_i]:
-                self.Player.angle -= self.Player.Aspeed
-            if keys[pygame.K_p]:
-                self.Player.angle += self.Player.Aspeed
-
-            if keys[pygame.K_m]:
-                pygame.event.set_grab(False)
-                pygame.mouse.set_visible(True)
+        self.angleL = 0
+        self.angleR = 0
 
 class enemy:
     #this is going to be a line 
@@ -141,7 +76,48 @@ class RayCasting():
     def isInShape(self, point, listOfPoint):
         pass
 
+    def addItem(self,thing):
+        ''' 
+        thing should have x,y, and endx, endy
+        '''
+        self.checkList.append(thing)
+
+    
+    def getDep(self, angle, map, Player):
+        depth = 0
+        xcomp =  math.cos(math.radians(angle))
+        ycomp = math.sin(math.radians(angle))
+
+        RangeOfAngleForE = []
+
+
+        for i in range(1, Player.viewDis + 1):
+            x = Player.x + i * xcomp
+            y = Player.y + i * ycomp
+
+            mapX = int(x / map.space)
+            mapY = int(y / map.space)
+
+            if map.map[mapY][mapX] == 1:
+                return i
+                
+        return Player.viewDis
+
+
+    def drawRays(self, Player, map):
+        startA = Player.angle - Player.fieldOfView / 2
+        for i in range(WIDTH):
+            angle = startA + i * Player.deltaAngle
+            depth = self.getDep(angle, map, Player)
+            depth *= math.cos(math.radians(angle - Player.angle))  # Correct for fish-eye effect
+            wallH = 21000 / depth
+            color = -(255 / Player.viewDis) * depth + 255
+            pygame.draw.line(screen, (color, 0, 0), 
+                            (i, HEIGHT // 2 - wallH // 2),#start point(top)
+                                (i, HEIGHT // 2 + wallH // 2))#end of line
+            
     def didLineCross(self,startLine1, endLine1, startLine2, endLine2):
+        '''line1 should be you view, line2 should be enemy'''
         l2 = [endLine2[0] - startLine2[0], endLine2[1] - startLine2[1]]
         l1 = [endLine1[0] - startLine1[0], endLine1[1] - startLine1[1]]
         #line1 as base
@@ -157,41 +133,24 @@ class RayCasting():
         l1CrossL2 = numpy.linalg.det(l2, s2s1) * numpy.linalg.det(l2, s2e1) <= 0
         
         return l2CrossL1 and l1CrossL2
+    
+    def didHitLine(self, startLine1, endLine1, startLine2, endLine2):
+        '''use when find depth of enemy, field of view check make sure they cross, 
+        l1 is you view, l2 is enemy, this used to find did l2 cut between l1'''
+        l2 = [endLine2[0] - startLine2[0], endLine2[1] - startLine2[1]]
+
+        s2s1 = [startLine1[0] - startLine2[0], startLine1[1] - startLine2[1]]
+        s2e1 = [endLine1[0] - startLine2[0], endLine1[0] - startLine2[0]]
+
+        return numpy.linalg.det(l2, s2s1) * numpy.linalg.det(l2, s2e1) <= 0
         
    
+    #???
     def quickCheck(self, startLine1, endLine1, startLine2, endLine2):
         xxx = max(startLine1[0], endLine1[0]) < max(startLine2[0], endLine2[0])
         yyy = max(startLine1[1], endLine1[1]) < max(startLine2[1], endLine2[1])
         return not xxx and not yyy
     
-    def getDep(self, angle, map, Player):
-        xcomp =  math.cos(math.radians(angle))
-        ycomp = math.sin(math.radians(angle))
-
-
-        for i in range(1, Player.viewDis + 1):
-            x = Player.x + i * xcomp
-            y = Player.y + i * ycomp
-
-            mapX = int(x / map.space)
-            mapY = int(y / map.space)
-
-
-            if map.map[mapY][mapX] == 1:
-                return i
-        return Player.viewDis
-
-    def drawRays(self, Player, map):
-        startA = Player.angle - Player.fieldOfView / 2
-        for i in range(WIDTH):
-            angle = startA + i * Player.deltaAngle
-            depth = self.getDep(angle, map, Player)
-            depth *= math.cos(math.radians(angle - Player.angle))  # Correct for fish-eye effect
-            wallH = 21000 / depth
-            color = -(255 / Player.viewDis) * depth + 255
-            pygame.draw.line(screen, (color, 0, 0), 
-                            (i, HEIGHT // 2 - wallH // 2),#start point(top)
-                                (i, HEIGHT // 2 + wallH // 2))#end of line
 class Game:
     def __init__(self):
         self.map = Map()
@@ -216,72 +175,75 @@ class Game:
         
     #need to be here need the canyoumove function
     def inputMove(self):
-            keys = pygame.key.get_pressed()
-            dx = self.Player.speed * math.cos(math.radians(self.Player.angle)) # back and forth movement
-            dy = self.Player.speed * math.sin(math.radians(self.Player.angle))
+        keys = pygame.key.get_pressed()
+        dx = self.Player.speed * math.cos(math.radians(self.Player.angle)) # back and forth movement
+        dy = self.Player.speed * math.sin(math.radians(self.Player.angle))
 
-            # for move side way
-            dRightX = self.Player.speed * math.cos(math.radians(self.Player.angle + 90))
-            dRightY = self.Player.speed * math.sin(math.radians(self.Player.angle + 90))
+        # for move side way
+        dRightX = self.Player.speed * math.cos(math.radians(self.Player.angle + 90))
+        dRightY = self.Player.speed * math.sin(math.radians(self.Player.angle + 90))
 
-            # back
-            if keys[pygame.K_s]:
-                self.Player.x -= dx
-                # if you run in to a wall, undo the move
-                if not self.canYouMove(self.Player.x,self.Player.y ):
-                    self.Player.x += dx
-                
-                self.Player.y -= dy
-                if not self.canYouMove(self.Player.x,self.Player.y ):
-                    self.Player.y += dy
-
-
-            # forward
-            if keys[pygame.K_w]:
-
+        # back
+        if keys[pygame.K_s]:
+            self.Player.x -= dx
+            # if you run in to a wall, undo the move
+            if not self.canYouMove(self.Player.x,self.Player.y ):
                 self.Player.x += dx
-                if not self.canYouMove(self.Player.x,self.Player.y ):
-                    self.Player.x -= dx
-
-                self.Player.y += dy
-                if not self.canYouMove(self.Player.x,self.Player.y ):
-                    self.Player.y -= dy
-
-
-            if keys[pygame.K_d]:
-                # y 
-                self.Player.y += dRightY
-                if not self.canYouMove(self.Player.x, self.Player.y):
-                    self.Player.y -= dRightY
- 
-                # x
-                self.Player.x += dRightX
-                if not self.canYouMove(self.Player.x, self.Player.y):
-                    self.Player.x -= dRightX
-
-            if keys[pygame.K_a]:
-                #y
-                self.Player.y -= dRightY
-                if not self.canYouMove(self.Player.x, self.Player.y):
-                    self.Player.y += dRightY
-
-                #X
-                self.Player.x -= dRightX
-                if not self.canYouMove(self.Player.x, self.Player.y):
-                    self.Player.x += dRightX
-
             
-            deltaPos =  pygame.mouse.get_rel()[0] 
+            self.Player.y -= dy
+            if not self.canYouMove(self.Player.x,self.Player.y ):
+                self.Player.y += dy
 
-            self.Player.angle += deltaPos
-            if keys[pygame.K_i]:
-                self.Player.angle -= self.Player.Aspeed
-            if keys[pygame.K_p]:
-                self.Player.angle += self.Player.Aspeed
 
-            if keys[pygame.K_m]:
-                pygame.event.set_grab(False)
-                pygame.mouse.set_visible(True)
+        # forward
+        if keys[pygame.K_w]:
+
+            self.Player.x += dx
+            if not self.canYouMove(self.Player.x,self.Player.y ):
+                self.Player.x -= dx
+
+            self.Player.y += dy
+            if not self.canYouMove(self.Player.x,self.Player.y ):
+                self.Player.y -= dy
+
+
+        if keys[pygame.K_d]:
+            # y 
+            self.Player.y += dRightY
+            if not self.canYouMove(self.Player.x, self.Player.y):
+                self.Player.y -= dRightY
+
+            # x
+            self.Player.x += dRightX
+            if not self.canYouMove(self.Player.x, self.Player.y):
+                self.Player.x -= dRightX
+
+        if keys[pygame.K_a]:
+            #y
+            self.Player.y -= dRightY
+            if not self.canYouMove(self.Player.x, self.Player.y):
+                self.Player.y += dRightY
+
+            #X
+            self.Player.x -= dRightX
+            if not self.canYouMove(self.Player.x, self.Player.y):
+                self.Player.x += dRightX
+
+        
+        deltaPos =  pygame.mouse.get_rel()[0] 
+
+        self.Player.angle += deltaPos
+        if keys[pygame.K_i]:
+            self.Player.angle -= self.Player.Aspeed
+        if keys[pygame.K_p]:
+            self.Player.angle += self.Player.Aspeed
+
+        if keys[pygame.K_m]:
+            pygame.event.set_grab(False)
+            pygame.mouse.set_visible(True)
+
+        self.Player.angleL = self.Player.angle - (self.Player.fieldOfView //2)
+        self.Player.angleR = self.Player.angle + (self.Player.fieldOfView //2)
 
     def initGame(self):
         pygame.mouse.set_visible(False)
