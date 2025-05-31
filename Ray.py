@@ -7,7 +7,7 @@ import numpy
 
 pygame.init()
 WIDTH, HEIGHT = 640, 480
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.DOUBLEBUF)
 clock = pygame.time.Clock()
 
 
@@ -137,6 +137,10 @@ class enemy:
         #this is the starting point
         self.x = 240
         self.y = 240
+        #middle
+        self.midX = 240
+        self.midY = 240
+
         #direction of the end point, always 90 to player, for cover check
         self.angle = 0
         #end point
@@ -151,11 +155,16 @@ class enemy:
         self.anglePtoEnd = 0
 
     def upDate(self):
-        # self.angle = math.atan2( self.player.y - self.y, self.player.x-self.x)+90
+        # self.angle = math.atan2( self.player.y - self.y, self.player.x-self.x)
         self.angle = self.player.angle + 90
 
-        self.endx = self.x + self.width * math.cos(self.angle)
-        self.endy = self.y + self.width * math.sin(self.angle)
+        halfWidth = self.width / 2
+        rad = math.radians(self.angle)
+        self.endx = self.midX + halfWidth * math.cos(rad)
+        self.endy = self.midY + halfWidth * math.sin(rad)
+
+        self.x = self.midX - halfWidth * math.cos(rad) 
+        self.y = self.midY - halfWidth * math.sin(rad)
 
         self.anglePtoStart = math.degrees(math.atan2(self.y - self.player.y, self.x - self.player.x))
         self.anglePtoEnd = math.degrees(math.atan2(self.endy - self.player.y, self.endx - self.player.x))
@@ -192,11 +201,10 @@ class RayCasting():
         return listRangeToCheck
                              
     
-    def getDep(self, angle, map, player):
+    def getDep(self, angle, map, player, RangeOfAngleForE):
         xcomp =  math.cos(math.radians(angle))
         ycomp = math.sin(math.radians(angle))
 
-        RangeOfAngleForE = self.getCoincide(player)
         enemyThere = False
         enemyGetHit = ""
 
@@ -225,17 +233,18 @@ class RayCasting():
         return [player.viewDis, (0,0,0)]
 
 
-    def drawRays(self, Player, map):
-        startA = Player.angle - Player.fieldOfView / 2
+    def drawRays(self, player, map):
+        startA = player.angle - player.fieldOfView / 2
+        RangeOfAngleForE = self.getCoincide(player)
         for i in range(WIDTH):
-            angle = startA + i * Player.deltaAngle
-            depth = self.getDep(angle, map, Player)
-            depth[0] *= math.cos(math.radians(angle - Player.angle))  # Correct for fish-eye effect, can optomoze
+            angle = startA + i * player.deltaAngle
+            depth = self.getDep(angle, map, player, RangeOfAngleForE)
+            depth[0] *= math.cos(math.radians(angle - player.angle))  # Correct for fish-eye effect, can optomoze
             wallH = 21000 / depth[0]
 
-            color1 = -(depth[1][0] / Player.viewDis) * depth[0] + depth[1][0]
-            color2 = -(depth[1][1] / Player.viewDis) * depth[0] + depth[1][1]
-            color3 = -(depth[1][2] / Player.viewDis) * depth[0] + depth[1][2]
+            color1 = -(depth[1][0] / player.viewDis) * depth[0] + depth[1][0]
+            color2 = -(depth[1][1] / player.viewDis) * depth[0] + depth[1][1]
+            color3 = -(depth[1][2] / player.viewDis) * depth[0] + depth[1][2]
 
             pygame.draw.line(screen, (color1, color2, color3), 
                             (i, HEIGHT // 2 - wallH // 2),#start point(top)
