@@ -10,6 +10,7 @@ class RayCasting():
     def __init__(self, screen):
         self.checkList = {} #a list of object that have a function that return a list of points
         self.screen = screen
+        self.depthList = []
 
     #the point is clock side, check the cross product of each side, 
     def isInShape(self, point, listOfPoint):
@@ -79,6 +80,7 @@ class RayCasting():
             angle = startA + i * player.deltaAngle
             depth = self.getDep(angle, map, player)
             depth[0] *= math.cos(math.radians(angle - player.angle))  # Correct for fish-eye effect, can optomoze
+            self.depthList.append(depth[0])
             wallH = 21000 / depth[0]
 
             color1 = -(depth[1][0] / player.viewDis) * depth[0] + depth[1][0]

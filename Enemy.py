@@ -12,6 +12,7 @@ class Enemy:
         self.name = name
         self.color = (0, 255, 0)
         self.width = width
+        self.image = "place holder"
         self.midX = 240
         self.midY = 240
         self.x = self.y = 0
@@ -32,6 +33,18 @@ class Enemy:
         self.endy = self.midY + dy
         self.anglePtoStart = angles.normalize(math.degrees(math.atan2(self.y - self.player.y, self.x - self.player.x)))
         self.anglePtoEnd = angles.normalize(math.degrees(math.atan2(self.endy - self.player.y, self.endx - self.player.x)))
+    def didGotShot(self):
+        playerEndx = self.player.x + math.cos(math.radians(self.player.angle)) * self.player.viewDis
+        playerEndy = self.player.y + math.sin(math.radians(self.player.angle)) * self.player.viewDis
+        #player angle line and enemy line
+        p, t = self.whereTwoLineMeet((self.player.x, self.player.y), (playerEndx, playerEndy), (self.x, self.y), (self.endx, self.endy))
+
+        if t == None:
+            #didn't cross
+            return False
+        if 0 < t < 1:
+            return True
+        return False
 
     def whereTwoLineMeet(self, a, b, c, d):
         ax, ay = a
@@ -89,18 +102,11 @@ class Enemy:
         screenx2 = max(sx1, sx2)
         fullWidth = screenx2 - screenx1
 
-        print(self.relative_angle_diff(self.player.angleL, self.anglePtoStart), self.relative_angle_diff(self.player.angleL, self.anglePtoEnd))
+        # print(self.relative_angle_diff(self.player.angleL, self.anglePtoStart), self.relative_angle_diff(self.player.angleL, self.anglePtoEnd))
 
         if leftAngle * rightAngle <= 0 and abs(leftAngle)>90 and abs(rightAngle) >90:
             return None, None
         
-        # 情况1：敌人完全在视锥内但没交点
-        # if leftT is None and rightT is None:
-        #     if self.is_angle_between(self.anglePtoStart, self.player.angleL, self.player.angleR) or \
-        #     self.is_angle_between(self.anglePtoEnd, self.player.angleL, self.player.angleR):
-        #         # print("full in")
-        #         return int(screenx1), int(fullWidth)
-
         # 情况4：都交点（正常显示）
         return int(screenx1), int(fullWidth)
 
@@ -108,11 +114,20 @@ class Enemy:
     def getDisToPlayer(self):
         return math.hypot(self.midX - self.player.x, self.midY - self.player.y)
 
-    def render(self):
+    def render(self, depthList):
         startPoint, widthRec = self.getWhatToDesplay()
         if startPoint is None:
             return
         dis = self.getDisToPlayer()
         eh = 18000 / dis
-        pygame.draw.rect(self.screen, self.color,
-                         pygame.Rect(int(startPoint), int(HEIGHT // 2 - eh // 2), int(widthRec), int(eh)))
+        # pygame.draw.rect(self.screen, self.color,
+        #                  pygame.Rect(int(startPoint), int(HEIGHT // 2 - eh // 2), int(widthRec), int(eh)))
+        
+        scaled = pygame.transform.scale(self.image, (int(widthRec), int(eh)))
+        self.screen.blit(scaled, (int(startPoint), int(HEIGHT // 2 - eh // 2)))
+        # for x in range(int(startPoint), int(startPoint + widthRec)):
+        #     if x < 0 or x >= WIDTH:
+        #         continue
+        #     if self.getDisToPlayer() < depthList[x]:  # 敌人比墙更近
+        #         pygame.draw.line(self.screen, self.color, (x, HEIGHT//2 - eh//2), (x, HEIGHT//2 + eh//2))
+

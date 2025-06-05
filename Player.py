@@ -27,7 +27,7 @@ class Player():
             return False
 
         return True
-    def inputMove(self):
+    def inputMove(self, enemy):
         keys = pygame.key.get_pressed()
         dx = self.speed * math.cos(math.radians(self.angle)) # back and forth movement
         dy = self.speed * math.sin(math.radians(self.angle))
@@ -94,6 +94,9 @@ class Player():
         if keys[pygame.K_m]:
             pygame.event.set_grab(False)
             pygame.mouse.set_visible(True)
+
+        if keys[pygame.K_n]:
+            print(enemy.didGotShot())
 
         self.angle = self.angle
 
