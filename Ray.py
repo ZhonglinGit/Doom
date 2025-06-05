@@ -38,19 +38,22 @@ class Game:
     def __init__(self):
         self.map = Map()
         self.Player = Player.Player(self.map)
-        self.enemy1 = Enemy.Enemy(self.Player, 100, "xxx")
+        self.enemy1 = Enemy.Enemy(screen, self.Player, 50, "xxx")
         self.rayCasting = RayCasting.RayCasting(screen)
         self.oldMouse = 0
         self.MouseSensitivity = 0.8
 
     def update(self):
-        self.enemy1.upDate()
+        self.enemy1.update()
         self.Player.inputMove()
         
     def initGame(self):
         pygame.mouse.set_visible(False)
         pygame.event.set_grab(True)
         self.rayCasting.addItem(self.enemy1)
+        
+        # self.enemy1.midX = self.Player.x + 100 * math.cos(self.Player.angle)
+        # self.enemy1.midY = self.Player.y + 100 * math.sin(self.Player.angle)
     def main(self):
         self.initGame()
         running = True
@@ -62,11 +65,13 @@ class Game:
 
             self.update()
 
-            print(self.Player.x / self.map.space, self.Player.y/ self.map.space)
+            # print(self.Player.x / self.map.space, self.Player.y/ self.map.space)
+            # print(self.Player.angleL, self.Player.angleR)
 
             screen.fill((0, 0, 0))
+            
             self.rayCasting.drawRays(self.Player, self.map)
-
+            self.enemy1.render()
             self.oldMouse = pygame.mouse.get_pos()
 
             pygame.display.flip()

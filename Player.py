@@ -95,5 +95,7 @@ class Player():
             pygame.event.set_grab(False)
             pygame.mouse.set_visible(True)
 
+        self.angle = self.angle
+
         self.angleL = self.angle - (self.fieldOfView //2)
         self.angleR = self.angle + (self.fieldOfView //2)

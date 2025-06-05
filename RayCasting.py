@@ -38,7 +38,7 @@ class RayCasting():
         return listRangeToCheck
                              
     
-    def getDep(self, angle, map, player, RangeOfAngleForE):
+    def getDep(self, angle, map, player):
         xcomp =  math.cos(math.radians(angle))
         ycomp = math.sin(math.radians(angle))
 
@@ -46,11 +46,11 @@ class RayCasting():
         enemyGetHit = ""
 
         # for future if I go different type of enemy
-        for rangeOfA in RangeOfAngleForE:
-            if angle <= rangeOfA[1] and angle >= rangeOfA[0]:
-                enemyGetHit = self.checkList[rangeOfA[2]]
-                enemyThere = True
-                break
+        # for rangeOfA in RangeOfAngleForE:
+        #     if angle <= rangeOfA[1] and angle >= rangeOfA[0]:
+        #         enemyGetHit = self.checkList[rangeOfA[2]]
+        #         enemyThere = True
+        #         break
 
 
         for i in range(1, player.viewDis + 1):
@@ -60,10 +60,10 @@ class RayCasting():
             mapX = int(x / map.space)
             mapY = int(y / map.space)
 
-            #remove this part
-            if enemyThere:
-                if self.didHitLine([player.x, player.y], [x, y], [enemyGetHit.x, enemyGetHit.y], [enemyGetHit.endx, enemyGetHit.endy]):
-                    return [i, enemyGetHit.color]
+            # #remove this part
+            # if enemyThere:
+            #     if self.didHitLine([player.x, player.y], [x, y], [enemyGetHit.x, enemyGetHit.y], [enemyGetHit.endx, enemyGetHit.endy]):
+            #         return [i, enemyGetHit.color]
 
             if map.map[mapY][mapX] == 1:
                 return [i, map.color]
@@ -73,11 +73,11 @@ class RayCasting():
 
     def drawRays(self, player, map):
         startA = player.angle - player.fieldOfView / 2
-        RangeOfAngleForE = self.getCoincide(player)
+        # RangeOfAngleForE = self.getCoincide(player)
         # a function in enemy called draw here
         for i in range(WIDTH):
             angle = startA + i * player.deltaAngle
-            depth = self.getDep(angle, map, player, RangeOfAngleForE)
+            depth = self.getDep(angle, map, player)
             depth[0] *= math.cos(math.radians(angle - player.angle))  # Correct for fish-eye effect, can optomoze
             wallH = 21000 / depth[0]
 
