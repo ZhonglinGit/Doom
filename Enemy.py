@@ -123,11 +123,14 @@ class Enemy:
         # pygame.draw.rect(self.screen, self.color,
         #                  pygame.Rect(int(startPoint), int(HEIGHT // 2 - eh // 2), int(widthRec), int(eh)))
         
+        #scaled the image to the right size
         scaled = pygame.transform.scale(self.image, (int(widthRec), int(eh)))
-        self.screen.blit(scaled, (int(startPoint), int(HEIGHT // 2 - eh // 2)))
-        # for x in range(int(startPoint), int(startPoint + widthRec)):
-        #     if x < 0 or x >= WIDTH:
-        #         continue
-        #     if self.getDisToPlayer() < depthList[x]:  # 敌人比墙更近
-        #         pygame.draw.line(self.screen, self.color, (x, HEIGHT//2 - eh//2), (x, HEIGHT//2 + eh//2))
+        # self.screen.blit(scaled, (int(startPoint), int(HEIGHT // 2 - eh // 2)))
+        for i in range(widthRec):
+            x = startPoint + i
+            if 0 <= x <= WIDTH:
+                if dis < depthList[x-1]:
+                    #cut the line on the picture
+                    column = scaled.subsurface(pygame.Rect(i, 0, 1, int(eh)))
+                    self.screen.blit(column, (x, HEIGHT // 2 - int(eh) // 2))
 

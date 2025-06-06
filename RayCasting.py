@@ -74,13 +74,15 @@ class RayCasting():
 
     def drawRays(self, player, map):
         startA = player.angle - player.fieldOfView / 2
+        self.depthList = []
         # RangeOfAngleForE = self.getCoincide(player)
         # a function in enemy called draw here
         for i in range(WIDTH):
             angle = startA + i * player.deltaAngle
             depth = self.getDep(angle, map, player)
-            depth[0] *= math.cos(math.radians(angle - player.angle))  # Correct for fish-eye effect, can optomoze
             self.depthList.append(depth[0])
+            depth[0] *= math.cos(math.radians(angle - player.angle))  # Correct for fish-eye effect, can optomoze
+            
             wallH = 21000 / depth[0]
 
             color1 = -(depth[1][0] / player.viewDis) * depth[0] + depth[1][0]
