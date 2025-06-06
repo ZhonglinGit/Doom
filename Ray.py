@@ -42,6 +42,7 @@ class Game:
         self.rayCasting = RayCasting.RayCasting(screen)
         self.oldMouse = 0
         self.MouseSensitivity = 0.8
+        self.pointer = "xxx"
 
     def update(self):
         self.enemy1.update()
@@ -89,6 +90,7 @@ class Game:
         pygame.event.set_grab(True)
         self.rayCasting.addItem(self.enemy1)
         self.enemy1.image = pygame.image.load("Doom\obamaFix.PNG").convert_alpha()
+        self.pointer = pygame.image.load("Doom\point.PNG").convert_alpha()
         # self.enemy1.image = pygame.transform.scale(self.enemy1.image, (330, 487))
 
         # self.enemy1.midX = self.Player.x + 100 * math.cos(self.Player.angle)
@@ -113,6 +115,9 @@ class Game:
             self.enemy1.render(self.rayCasting.depthList)
 
             self.drawMinimap(screen)
+
+            scaledPointer = pygame.transform.scale(self.pointer, (500,500))
+            screen.blit(scaledPointer,(WIDTH // 2, 0))
             self.oldMouse = pygame.mouse.get_pos()
 
             pygame.display.flip()

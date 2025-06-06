@@ -9,7 +9,7 @@ class Player():
         self.x = 4 * 30
         self.y = 4 * 30
         self.angle = 0 #with respect to the big map
-        self.viewDis = 120
+        self.viewDis = 160
         self.fieldOfView = 60  # degrees
         self.deltaAngle = self.fieldOfView / WIDTH  # degrees per ray
         self.speed =  3
