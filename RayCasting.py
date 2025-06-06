@@ -80,9 +80,9 @@ class RayCasting():
         for i in range(WIDTH):
             angle = startA + i * player.deltaAngle
             depth = self.getDep(angle, map, player)
-            self.depthList.append(depth[0])
-            depth[0] *= math.cos(math.radians(angle - player.angle))  # Correct for fish-eye effect, can optomoze
             
+            depth[0] *= math.cos(math.radians(angle - player.angle))  # Correct for fish-eye effect, can optomoze
+            self.depthList.append(depth[0])
             wallH = 21000 / depth[0]
 
             color1 = -(depth[1][0] / player.viewDis) * depth[0] + depth[1][0]

@@ -88,7 +88,7 @@ class Game:
         pygame.mouse.set_visible(False)
         pygame.event.set_grab(True)
         self.rayCasting.addItem(self.enemy1)
-        self.enemy1.image = pygame.image.load("Doom/obama.jpg").convert()
+        self.enemy1.image = pygame.image.load("Doom\obamaFix.PNG").convert_alpha()
         # self.enemy1.image = pygame.transform.scale(self.enemy1.image, (330, 487))
 
         # self.enemy1.midX = self.Player.x + 100 * math.cos(self.Player.angle)

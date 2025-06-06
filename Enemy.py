@@ -123,8 +123,13 @@ class Enemy:
         # pygame.draw.rect(self.screen, self.color,
         #                  pygame.Rect(int(startPoint), int(HEIGHT // 2 - eh // 2), int(widthRec), int(eh)))
         
+
+        #from 1 to viewDis, alpy is 255 to 80
+        alph = dis * -255/self.player.viewDis +255
         #scaled the image to the right size
         scaled = pygame.transform.scale(self.image, (int(widthRec), int(eh)))
+        scaled.set_alpha(alph)
+        print(alph)
         # self.screen.blit(scaled, (int(startPoint), int(HEIGHT // 2 - eh // 2)))
         for i in range(widthRec):
             x = startPoint + i
