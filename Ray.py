@@ -33,12 +33,21 @@ class Map():
     
     def getmap(self):
         return self.map
+    def canYouMove(self, x, y):
+        mapX = int(x / self.space)
+        mapY = int(y / self.space)
+        
+      
+        if self.map[mapY][mapX] == 1:
+            return False
+
+        return True
 
 class Game:
     def __init__(self):
         self.map = Map()
         self.Player = Player.Player(self.map)
-        self.enemy1 = Enemy.Enemy(screen, self.Player, 20, "xxx")
+        self.enemy1 = Enemy.Enemy(screen, self.Player,self.map, 20, "xxx")
         self.rayCasting = RayCasting.RayCasting(screen)
         self.oldMouse = 0
         self.MouseSensitivity = 0.8
@@ -89,8 +98,8 @@ class Game:
         pygame.mouse.set_visible(False)
         pygame.event.set_grab(True)
         self.rayCasting.addItem(self.enemy1)
-        self.enemy1.image = pygame.image.load("Doom\obamaFix.PNG").convert_alpha()
-        self.pointer = pygame.image.load("Doom\point.PNG").convert_alpha()
+        self.enemy1.image = pygame.image.load("Doom\picture\obamaFix.PNG").convert_alpha()
+        self.pointer = pygame.image.load("Doom\picture\point.PNG").convert_alpha()
         # self.enemy1.image = pygame.transform.scale(self.enemy1.image, (330, 487))
 
         # self.enemy1.midX = self.Player.x + 100 * math.cos(self.Player.angle)

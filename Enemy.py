@@ -6,20 +6,35 @@ import pygame
 WIDTH, HEIGHT = 640, 480
 
 class Enemy:
-    def __init__(self, screen, player, width, name):
+    def __init__(self, screen, player,map, width, name):
         self.screen = screen
         self.player = player
+        self.map = map
+
         self.name = name
         self.color = (0, 255, 0)
         self.width = width
         self.image = "place holder"
+        self.fullhealth = 5
+        self.health = self.fullhealth
+
         self.midX = 240
         self.midY = 240
-        self.x = self.y = 0
-        self.endx = self.endy = 0
+
+        #these are start point
+        self.x = 0
+        self.y = 0
+        #these are end point
+        self.endx =0
+        self.endy = 0
+
         self.angle = 0
         self.anglePtoStart = 0
         self.anglePtoEnd = 0
+
+        self.speed = 0.5
+
+        self.deeplist = "xxx"
 
     def update(self):
         self.angle = self.player.angle + 90
@@ -33,6 +48,16 @@ class Enemy:
         self.endy = self.midY + dy
         self.anglePtoStart = angles.normalize(math.degrees(math.atan2(self.y - self.player.y, self.x - self.player.x)))
         self.anglePtoEnd = angles.normalize(math.degrees(math.atan2(self.endy - self.player.y, self.endx - self.player.x)))
+
+        angle = math.atan2(self.player.y - self.y, self.player.x - self.x)
+        self.midX += self.speed * math.cos(angle)
+        if not self.map.canYouMove(self.midX, self.midY):
+                self.midX -= self.speed * math.cos(angle)
+
+        self.midY += self.speed * math.sin(angle)
+        if not self.map.canYouMove(self.midX, self.midY):
+                self.midY -= self.speed * math.sin(angle)
+
     def didGotShot(self):
         playerEndx = self.player.x + math.cos(math.radians(self.player.angle)) * self.player.viewDis
         playerEndy = self.player.y + math.sin(math.radians(self.player.angle)) * self.player.viewDis
@@ -42,7 +67,14 @@ class Enemy:
         if t == None:
             #didn't cross
             return False
+        
+        dis = math.hypot(p[0] - self.player.x, p[1] - self.player.y)
+        if dis > self.deeplist[WIDTH //2-1]:
+            #you don't shot through wall only need to check the mid line
+            return False
+        
         if 0 < t < 1:
+            self.health -= 1
             return True
         return False
 
@@ -68,10 +100,11 @@ class Enemy:
             return None, None
 
     def relative_angle_diff(self, from_angle, to_angle):
-        """计算从 from_angle 到 to_angle 的有向角度差（可为负数）"""
+        """get the angle between the two, 180 to -180, so it kind of have direction"""
         diff = (to_angle - from_angle + 540) % 360 - 180
         return diff
     def is_angle_between(self, a, left, right):
+        """check is a between left and right, consider over 360"""
         a %= 360
         left %= 360
         right %= 360
@@ -81,16 +114,6 @@ class Enemy:
             return a >= left or a <= right
 
     def getWhatToDesplay(self):
-        viewStart = (self.player.x, self.player.y)
-        viewRightEnd = (self.player.x + math.cos(self.player.angleR) * self.player.viewDis,
-                        self.player.y + math.sin(self.player.angleR) * self.player.viewDis)
-        viewLeftEnd = (self.player.x + math.cos(self.player.angleL) * self.player.viewDis,
-                    self.player.y + math.sin(self.player.angleL) * self.player.viewDis)
-        enemyPoint = (self.x, self.y)
-        enemyEndPoint = (self.endx, self.endy)
-
-        rightPoint, rightT = self.whereTwoLineMeet(viewStart, viewRightEnd, enemyPoint, enemyEndPoint)
-        leftPoint, leftT = self.whereTwoLineMeet(viewStart, viewLeftEnd, enemyPoint, enemyEndPoint)
 
         leftAngle  = self.relative_angle_diff(self.player.angleL, self.anglePtoStart)
         rightAngle = self.relative_angle_diff(self.player.angleL, self.anglePtoEnd)
@@ -107,7 +130,6 @@ class Enemy:
         if leftAngle * rightAngle <= 0 and abs(leftAngle)>90 and abs(rightAngle) >90:
             return None, None
         
-        # 情况4：都交点（正常显示）
         return int(screenx1), int(fullWidth)
 
 
@@ -115,22 +137,29 @@ class Enemy:
         return math.hypot(self.midX - self.player.x, self.midY - self.player.y)
 
     def render(self, depthList):
+        self.deeplist = depthList
         startPoint, widthRec = self.getWhatToDesplay()
         if startPoint is None:
             return
         dis = self.getDisToPlayer()
         eh = 18000 / dis
+        #for future
         # pygame.draw.rect(self.screen, self.color,
         #                  pygame.Rect(int(startPoint), int(HEIGHT // 2 - eh // 2), int(widthRec), int(eh)))
         
 
-        #from 1 to viewDis, alpy is 255 to 80
-        alph = dis * -255/self.player.viewDis +255
+        #from 1 to viewDis, alph is 0 to 255
+        alph =int(dis * -255/self.player.viewDis +255)
         #scaled the image to the right size
         scaled = pygame.transform.scale(self.image, (int(widthRec), int(eh)))
         scaled.set_alpha(alph)
         # print(alph)
         # self.screen.blit(scaled, (int(startPoint), int(HEIGHT // 2 - eh // 2)))
+        healthSurface = pygame.Surface((int(widthRec * self.health / self.fullhealth), int(eh * 0.05)), pygame.SRCALPHA)
+        healthSurface.set_alpha(alph)
+        pygame.draw.rect(healthSurface, (0, 255,0), healthSurface.get_rect())
+        self.screen.blit(healthSurface, (int(startPoint), int(HEIGHT // 2 - eh // 2 - eh * 0.05)))
+
         for i in range(widthRec):
             x = startPoint + i
             if 0 <= x <= WIDTH:

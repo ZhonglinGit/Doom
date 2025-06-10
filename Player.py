@@ -9,24 +9,21 @@ class Player():
         self.x = 4 * 30
         self.y = 4 * 30
         self.angle = 0 #with respect to the big map
+        self.angleL = 0
+        self.angleR = 0
+
         self.viewDis = 160
         self.fieldOfView = 60  # degrees
         self.deltaAngle = self.fieldOfView / WIDTH  # degrees per ray
+
         self.speed =  3
         self.Aspeed = 2
-        self.angleL = 0
-        self.angleR = 0
+
+        self.fireGap = 1000  #ms
+        self.fireOldTime = 0
         self.map = map
 
-    def canYouMove(self, x, y):
-        mapX = int(x / self.map.space)
-        mapY = int(y / self.map.space)
-        
-      
-        if self.map.map[mapY][mapX] == 1:
-            return False
 
-        return True
     def inputMove(self, enemy):
         keys = pygame.key.get_pressed()
         dx = self.speed * math.cos(math.radians(self.angle)) # back and forth movement
@@ -40,11 +37,11 @@ class Player():
         if keys[pygame.K_s]:
             self.x -= dx
             # if you run in to a wall, undo the move
-            if not self.canYouMove(self.x,self.y ):
+            if not self.map.canYouMove(self.x,self.y ):
                 self.x += dx
             
             self.y -= dy
-            if not self.canYouMove(self.x,self.y ):
+            if not self.map.canYouMove(self.x,self.y ):
                 self.y += dy
 
 
@@ -52,34 +49,34 @@ class Player():
         if keys[pygame.K_w]:
 
             self.x += dx
-            if not self.canYouMove(self.x,self.y ):
+            if not self.map.canYouMove(self.x,self.y ):
                 self.x -= dx
 
             self.y += dy
-            if not self.canYouMove(self.x,self.y ):
+            if not self.map.canYouMove(self.x,self.y ):
                 self.y -= dy
 
 
         if keys[pygame.K_d]:
             # y 
             self.y += dRightY
-            if not self.canYouMove(self.x, self.y):
+            if not self.map.canYouMove(self.x, self.y):
                 self.y -= dRightY
 
             # x
             self.x += dRightX
-            if not self.canYouMove(self.x, self.y):
+            if not self.map.canYouMove(self.x, self.y):
                 self.x -= dRightX
 
         if keys[pygame.K_a]:
             #y
             self.y -= dRightY
-            if not self.canYouMove(self.x, self.y):
+            if not self.map.canYouMove(self.x, self.y):
                 self.y += dRightY
 
             #X
             self.x -= dRightX
-            if not self.canYouMove(self.x, self.y):
+            if not self.map.canYouMove(self.x, self.y):
                 self.x += dRightX
 
         
@@ -95,8 +92,10 @@ class Player():
             pygame.event.set_grab(False)
             pygame.mouse.set_visible(True)
 
-        if keys[pygame.K_n]:
-            print(enemy.didGotShot())
+        if pygame.mouse.get_pressed(num_buttons=3)[0]:
+            if pygame.time.get_ticks() - self.fireOldTime > self.fireGap:
+                self.fireOldTime = pygame.time.get_ticks()
+                print(enemy.didGotShot())
 
         self.angle = self.angle
 
