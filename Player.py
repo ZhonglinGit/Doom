@@ -101,3 +101,4 @@ class Player():
 
         self.angleL = self.angle - (self.fieldOfView //2)
         self.angleR = self.angle + (self.fieldOfView //2)
+        

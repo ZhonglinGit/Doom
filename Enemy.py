@@ -6,14 +6,14 @@ import pygame
 WIDTH, HEIGHT = 640, 480
 
 class Enemy:
-    def __init__(self, screen, player,map, width, name):
+    def __init__(self, screen, player,map, name):
         self.screen = screen
         self.player = player
         self.map = map
 
         self.name = name
         self.color = (0, 255, 0)
-        self.width = width
+        self.width = 20
         self.image = "place holder"
         self.fullhealth = 5
         self.health = self.fullhealth
@@ -35,6 +35,7 @@ class Enemy:
         self.speed = 0.5
 
         self.deeplist = "xxx"
+
 
     def update(self):
         self.angle = self.player.angle + 90
