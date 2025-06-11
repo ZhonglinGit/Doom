@@ -10,10 +10,8 @@ class Devil(Enemy.Enemy):
         self.image = pygame.image.load("Doom\picture\devil.PNG").convert_alpha()
         self.fullhealth = 5
         self.width = 20
-        self.midX = x
-        self.midY = y
-        print(f"[Debug] Devil enemy x type: {type(self.midX)}, value: {self.midX}")
-
+        self.midX = x * self.map.space
+        self.midY = y * self.map.space
    
 
 

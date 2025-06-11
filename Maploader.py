@@ -2,6 +2,7 @@ import json
 import random
 import EnemyMore
 import EnemyMore.Devil
+import Map
 
 
 class Maploader():
@@ -21,20 +22,21 @@ class Maploader():
         room = random.choice(self.file[level])
         self.nextLevel = room["nextLevel"]
 
-        return room["map"], self.loadEnemy(room)
+        map = Map.Map(room["map"])
 
-    def loadEnemy(self, room):
+        return map, self.loadEnemy(room, map)
+
+    def loadEnemy(self, room, map):
         enemyList = room["enemy"]
         bigBeautifulList = []
         name = 0
         for i in enemyList:
             if i["Type"] == "Devil":
-                print(f"[Debug] enemy x type: {type(i['x'])}, value: {i['x']}")
                 eneny = EnemyMore.Devil.Devil(self.screen,
                                                 self.player,
-                                                room["map"],
-                                                name,
-                                                i["x"], i["y"] )
+                                                map,
+                                                i["x"], i["y"], 
+                                                name, )
             #more enemy
 
             bigBeautifulList.append(eneny)

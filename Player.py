@@ -5,7 +5,7 @@ import math
 
 class Player():
 
-    def __init__(self, map):
+    def __init__(self):
         self.x = 4 * 30
         self.y = 4 * 30
         self.angle = 0 #with respect to the big map
@@ -21,7 +21,7 @@ class Player():
 
         self.fireGap = 1000  #ms
         self.fireOldTime = 0
-        self.map = map
+        self.map = "xxx"
 
 
     def inputMove(self, enemy):
@@ -95,7 +95,9 @@ class Player():
         if pygame.mouse.get_pressed(num_buttons=3)[0]:
             if pygame.time.get_ticks() - self.fireOldTime > self.fireGap:
                 self.fireOldTime = pygame.time.get_ticks()
-                print(enemy.didGotShot())
+                for e in enemy:
+                    print(e.didGotShot())
+                
 
         self.angle = self.angle
 

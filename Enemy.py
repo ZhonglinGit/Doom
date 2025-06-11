@@ -32,7 +32,7 @@ class Enemy:
         self.anglePtoStart = 0
         self.anglePtoEnd = 0
 
-        self.speed = 0.5
+        self.speed = 0
 
         self.deeplist = "xxx"
 
@@ -58,6 +58,7 @@ class Enemy:
         self.midY += self.speed * math.sin(angle)
         if not self.map.canYouMove(self.midX, self.midY):
                 self.midY -= self.speed * math.sin(angle)
+        print(self.midX, self.midY)
 
     def didGotShot(self):
         playerEndx = self.player.x + math.cos(math.radians(self.player.angle)) * self.player.viewDis
