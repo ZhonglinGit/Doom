@@ -1,37 +1,58 @@
 
-WIDTH, HEIGHT = 640, 480
+import Constant
 import pygame
 import math
 
 class Player():
 
     def __init__(self):
-        self.x = 4 * 30
-        self.y = 4 * 30
+        self.x = 1 * Constant.SPACE
+        self.y = 1 * Constant.SPACE
         self.angle = 0 #with respect to the big map
         self.angleL = 0
         self.angleR = 0
 
         self.viewDis = 160
         self.fieldOfView = 60  # degrees
-        self.deltaAngle = self.fieldOfView / WIDTH  # degrees per ray
+        self.deltaAngle = self.fieldOfView / Constant.WIDTH  # degrees per ray
 
-        self.speed =  3
+        self.speedInit = 3
+        self.speed =  self.speedInit
         self.Aspeed = 2
 
-        self.fireGap = 1000  #ms
+        self.fireGap = 100  #ms
         self.fireOldTime = 0
         self.map = "xxx"
+
+        self.energyBarMax = 2000
+        self.energy = self.energyBarMax
+        self.energyGain = 10
+        self.speedCost = 10
+        self.bulletCost = 400
+        self.isSpeeding = False
+
+        self.pointer = pygame.image.load("Doom\picture\point.PNG").convert_alpha()
 
 
     def inputMove(self, enemy):
         keys = pygame.key.get_pressed()
         dx = self.speed * math.cos(math.radians(self.angle)) # back and forth movement
         dy = self.speed * math.sin(math.radians(self.angle))
-
+        
         # for move side way
         dRightX = self.speed * math.cos(math.radians(self.angle + 90))
         dRightY = self.speed * math.sin(math.radians(self.angle + 90))
+
+        if keys[pygame.K_LSHIFT] and self.energy > 0:
+            self.speed = self.speedInit * 2
+            self.energy -= self.speedCost
+            self.isSpeeding = True
+            
+        else:
+            self.speed = self.speedInit
+            self.isSpeeding = False
+
+        print(self.isSpeeding)
 
         # back
         if keys[pygame.K_s]:
@@ -92,9 +113,11 @@ class Player():
             pygame.event.set_grab(False)
             pygame.mouse.set_visible(True)
 
+        #shot
         if pygame.mouse.get_pressed(num_buttons=3)[0]:
-            if pygame.time.get_ticks() - self.fireOldTime > self.fireGap:
+            if pygame.time.get_ticks() - self.fireOldTime > self.fireGap and self.energy - self.bulletCost > 0:
                 self.fireOldTime = pygame.time.get_ticks()
+                self.energy -= self.bulletCost
                 for e in enemy:
                     print(e.didGotShot())
                 
@@ -103,4 +126,10 @@ class Player():
 
         self.angleL = self.angle - (self.fieldOfView //2)
         self.angleR = self.angle + (self.fieldOfView //2)
-        
+
+        if not self.isSpeeding:
+            self.energy += self.energyGain
+
+    
+    def renderUI(self):
+        pass

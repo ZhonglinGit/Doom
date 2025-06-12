@@ -1,12 +1,12 @@
 
 import math
 import pygame
+import Constant
 
 class Map():
     def __init__(self, mapList):
         
         self.map = mapList
-        self.space = 60
         self.width = len(self.map[0])
         self.height = len(self.map)
         self.color = (255,0, 0)
@@ -14,8 +14,8 @@ class Map():
     def getmap(self):
         return self.map
     def canYouMove(self, x, y):
-        mapX = int(x / self.space)
-        mapY = int(y / self.space)
+        mapX = int(x / Constant.SPACE)
+        mapY = int(y / Constant.SPACE)
         
       
         if self.map[mapY][mapX] == 1:
@@ -24,7 +24,8 @@ class Map():
         return True
     def drawMinimap(self, screen, player, enemyList):
         scale = 0.15
-        scaleSize = int(self.space * scale)
+        scaleSize = int(Constant.SPACE * scale)
+        startxDis = Constant.WIDTH * (1-scale)
         
         # walls
         #enumerate help you get the index when you go through a list
@@ -34,18 +35,18 @@ class Map():
                 if v == 1:
                     color = (200, 200, 200)
                 pygame.draw.rect(screen, color, pygame.Rect(
-                    x * scaleSize, y * scaleSize, scaleSize, scaleSize
+                    x * scaleSize +startxDis, y * scaleSize, scaleSize, scaleSize
                 ))
 
         # player
         px = player.x * scale
         py = player.y * scale
-        pygame.draw.circle(screen, (0, 255, 0), (int(px), int(py)), 3)
+        pygame.draw.circle(screen, (0, 255, 0), (int(px+startxDis), int(py)), 3)
 
         # angle
         dx = math.cos(math.radians(player.angle)) * 10
         dy = math.sin(math.radians(player.angle)) * 10
-        pygame.draw.line(screen, (0, 255, 0), (px, py), (px + dx, py + dy), 2)
+        pygame.draw.line(screen, (0, 255, 0), (px+startxDis, py), (px + dx+startxDis, py + dy), 2)
 
         # enemy
         for e in enemyList:
@@ -57,4 +58,4 @@ class Map():
             ex2 = ex + ew * math.cos(math.radians(e.angle))
             ey2 = ey + ew * math.sin(math.radians(e.angle))
 
-            pygame.draw.line(screen, (255, 0, 0), (ex1, ey1), (ex2, ey2), 2)
+            pygame.draw.line(screen, (255, 0, 0), (ex1+startxDis, ey1), (ex2+startxDis, ey2), 2)

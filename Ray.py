@@ -78,6 +78,8 @@ class Game:
     def newLevel(self):
         #if = [] -> level1
         #then next level
+        self.Player.x = 1 * Constant.SPACE
+        self.Player.y = 1 * Constant.SPACE
         if self.map == "xxx":
             self.map, self.enemyList = self.mapLoader.loadRoomEnemy("level_1")
             self.Player.map = self.map
@@ -107,12 +109,14 @@ class Game:
             self.map.drawMinimap(screen, self.Player, self.enemyList)
 
             scaledPointer = pygame.transform.scale(self.pointer, (500,500))
-            screen.blit(scaledPointer,(Constant.WIDTH // 2, 0))
+            screen.blit(scaledPointer,(Constant.WIDTH // 2, 80))
             self.oldMouse = pygame.mouse.get_pos()
 
             for e in self.enemyList:
                 if e.health == 0:
                     self.enemyList.remove(e)
+            if self.enemyList == []:
+                self.newLevel()
 
             pygame.display.flip()
             clock.tick(60)

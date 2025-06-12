@@ -3,8 +3,9 @@ import math
 import sympy
 import numpy
 import pygame
+import Constant
 
-WIDTH, HEIGHT = 640, 480
+
 
 class RayCasting():
     def __init__(self, screen):
@@ -58,8 +59,8 @@ class RayCasting():
             x = player.x + i * xcomp
             y = player.y + i * ycomp
 
-            mapX = int(x / map.space)
-            mapY = int(y / map.space)
+            mapX = int(x / Constant.SPACE)
+            mapY = int(y / Constant.SPACE)
 
             # #remove this part
             # if enemyThere:
@@ -77,7 +78,7 @@ class RayCasting():
         self.depthList = []
         # RangeOfAngleForE = self.getCoincide(player)
         # a function in enemy called draw here
-        for i in range(WIDTH):
+        for i in range(Constant.WIDTH):
             angle = startA + i * player.deltaAngle
             depth = self.getDep(angle, map, player)
             
@@ -90,8 +91,8 @@ class RayCasting():
             color3 = -(depth[1][2] / player.viewDis) * depth[0] + depth[1][2]
 
             pygame.draw.line(self.screen, (color1, color2, color3), 
-                            (i, HEIGHT // 2 - wallH // 2),#start point(top)
-                                (i, HEIGHT // 2 + wallH // 2))#end of line
+                            (i, Constant.HEIGHT // 2 - wallH // 2),#start point(top)
+                                (i, Constant.HEIGHT // 2 + wallH // 2))#end of line
             
     def didLineCross(startLine1, endLine1, startLine2, endLine2):
         l2 = [endLine2[0] - startLine2[0], endLine2[1] - startLine2[1]]

@@ -2,6 +2,7 @@ import math
 import sympy
 import angles
 import pygame
+import Constant
 
 WIDTH, HEIGHT = 640, 480
 
@@ -58,7 +59,7 @@ class Enemy:
         self.midY += self.speed * math.sin(angle)
         if not self.map.canYouMove(self.midX, self.midY):
                 self.midY -= self.speed * math.sin(angle)
-        print(self.midX, self.midY)
+        
 
     def didGotShot(self):
         playerEndx = self.player.x + math.cos(math.radians(self.player.angle)) * self.player.viewDis
@@ -71,7 +72,7 @@ class Enemy:
             return False
         
         dis = math.hypot(p[0] - self.player.x, p[1] - self.player.y)
-        if dis > self.deeplist[WIDTH //2-1]:
+        if dis > self.deeplist[Constant.WIDTH //2-1]:
             #you don't shot through wall only need to check the mid line
             return False
         
@@ -144,7 +145,7 @@ class Enemy:
         if startPoint is None:
             return
         dis = self.getDisToPlayer()
-        eh = 18000 / dis
+        eh = 18000 / (dis +1)
         #for future
         # pygame.draw.rect(self.screen, self.color,
         #                  pygame.Rect(int(startPoint), int(HEIGHT // 2 - eh // 2), int(widthRec), int(eh)))
@@ -157,6 +158,8 @@ class Enemy:
         scaled.set_alpha(alph)
         # print(alph)
         # self.screen.blit(scaled, (int(startPoint), int(HEIGHT // 2 - eh // 2)))
+
+        #health bar
         healthSurface = pygame.Surface((int(widthRec * self.health / self.fullhealth), int(eh * 0.05)), pygame.SRCALPHA)
         healthSurface.set_alpha(alph)
         pygame.draw.rect(healthSurface, (0, 255,0), healthSurface.get_rect())
@@ -164,7 +167,7 @@ class Enemy:
 
         for i in range(widthRec):
             x = startPoint + i
-            if 0 <= x <= WIDTH:
+            if 0 <= x <= Constant.WIDTH:
                 if dis < depthList[x-1]:
                     #cut the line on the picture
                     column = scaled.subsurface(pygame.Rect(i, 0, 1, int(eh)))
