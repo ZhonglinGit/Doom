@@ -43,7 +43,7 @@ class Game:
     def __init__(self):
         #up date this at new level
         self.map = "xxx"
-        self.Player = Player.Player()
+        self.Player = Player.Player(screen)
         # self.enemy1 = Enemy.Enemy(screen, self.Player,self.map, "xxx")
         # self.enemy2 = EnemyMore.Devil.Devil(screen, self.Player,self.map, 300, 300, "xxx")
 
@@ -59,10 +59,17 @@ class Game:
     def update(self):
         for i in self.enemyList:
             i.update()
-        # self.enemy1.update()
-        # self.enemy2.update()
+
         self.Player.inputMove(self.enemyList)
 
+    def render(self):
+        self.rayCasting.drawRays(self.Player, self.map)
+
+        for i in self.enemyList:
+            i.render(self.rayCasting.depthList)
+
+        self.map.drawMinimap(screen, self.Player, self.enemyList)
+        self.Player.renderUI()
    
         
     def initGame(self):
@@ -71,15 +78,15 @@ class Game:
         self.mapLoader.loadFile()
 
         # self.enemy1.image = pygame.image.load("Doom\picture\obamaFix.PNG").convert_alpha()
-        self.pointer = pygame.image.load("Doom\picture\point.PNG").convert_alpha()
+        # self.pointer = pygame.image.load("Doom\picture\point.PNG").convert_alpha()
 
         self.newLevel()
 
     def newLevel(self):
         #if = [] -> level1
         #then next level
-        self.Player.x = 1 * Constant.SPACE
-        self.Player.y = 1 * Constant.SPACE
+        self.Player.x = 1.5 * Constant.SPACE
+        self.Player.y = 1.5 * Constant.SPACE
         if self.map == "xxx":
             self.map, self.enemyList = self.mapLoader.loadRoomEnemy("level_1")
             self.Player.map = self.map
@@ -101,15 +108,10 @@ class Game:
 
             screen.fill((0, 0, 0))
             
-            self.rayCasting.drawRays(self.Player, self.map)
-            for i in self.enemyList:
-                i.render(self.rayCasting.depthList)
-            # self.enemy1.render(self.rayCasting.depthList)
-            # self.enemy2.render(self.rayCasting.depthList)
-            self.map.drawMinimap(screen, self.Player, self.enemyList)
-
-            scaledPointer = pygame.transform.scale(self.pointer, (500,500))
-            screen.blit(scaledPointer,(Constant.WIDTH // 2, 80))
+            
+            self.render()
+            # scaledPointer = pygame.transform.scale(self.pointer, (500,500))
+            # screen.blit(scaledPointer,(Constant.WIDTH // 2, 80))
             self.oldMouse = pygame.mouse.get_pos()
 
             for e in self.enemyList:
