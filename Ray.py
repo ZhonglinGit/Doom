@@ -12,32 +12,13 @@ import RayCasting
 import EnemyMore
 import Maploader
 import Constant
+import PerkChoser
+import Animation
 
 pygame.init()
 screen = pygame.display.set_mode((Constant.WIDTH, Constant.HEIGHT), pygame.DOUBLEBUF)
 clock = pygame.time.Clock()
 
-
-class Map():
-    def __init__(self):
-        
-        self.map = [[]]
-        self.space = 60
-        self.width = len(self.map[0])
-        self.height = len(self.map)
-        self.color = (255,0, 0)
-    
-    def getmap(self):
-        return self.map
-    def canYouMove(self, x, y):
-        mapX = int(x / self.space)
-        mapY = int(y / self.space)
-        
-      
-        if self.map[mapY][mapX] == 1:
-            return False
-
-        return True
 
 class Game:
     def __init__(self):
@@ -50,6 +31,10 @@ class Game:
         self.enemyList = []
 
         self.mapLoader = Maploader.Maploader(screen, self.Player)
+
+        self.perkChoser = PerkChoser.PerkChoser(screen, self.Player)
+
+        self.animation = Animation.Animation(screen)
 
         self.rayCasting = RayCasting.RayCasting(screen)
         self.oldMouse = 0
@@ -93,9 +78,11 @@ class Game:
         else:
             self.map, self.enemyList = self.mapLoader.loadRoomEnemy(self.mapLoader.nextLevel)
             self.Player.map = self.map
+        self.animation.fade_in_with_circle(lambda: self.render())
     def main(self):
         self.initGame()
         running = True
+        fadeIn = True
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -110,17 +97,25 @@ class Game:
             
             
             self.render()
+            pygame.display.flip()
             # scaledPointer = pygame.transform.scale(self.pointer, (500,500))
             # screen.blit(scaledPointer,(Constant.WIDTH // 2, 80))
-            self.oldMouse = pygame.mouse.get_pos()
+            
+            
+
 
             for e in self.enemyList:
                 if e.health == 0:
                     self.enemyList.remove(e)
             if self.enemyList == []:
+                self.animation.fade_out_with_circle()
+                self.perkChoser.perkMenu()
                 self.newLevel()
 
-            pygame.display.flip()
+            if self.Player.health <= 0:
+                self.animation.gameOver()
+                
+            
             clock.tick(60)
 
         pygame.quit()

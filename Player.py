@@ -12,15 +12,21 @@ class Player():
         self.angleL = 0
         self.angleR = 0
 
-        self.viewDis = 160
+        self.viewDis = 240
         self.fieldOfView = 60  # degrees
         self.deltaAngle = self.fieldOfView / Constant.WIDTH  # degrees per ray
 
-        self.speedInit = 3
+        self.speedInit = 4
         self.speed =  self.speedInit
         self.Aspeed = 2
 
+        self.Fullhealth = 10
+        self.health = self.Fullhealth
+        self.invincibilityTime = 500
+        self.healthTime = 0
+
         self.fireGap = 100  #ms
+        self.damage = 1
         self.fireOldTime = 0
         self.map = "xxx"
 
@@ -35,7 +41,48 @@ class Player():
         self.pointer = pygame.image.load("Doom\picture\point.PNG").convert_alpha()
 
 
+    def getHit(self):
+        if pygame.time.get_ticks() - self.healthTime >= self.invincibilityTime:
+            self.healthTime = pygame.time.get_ticks()
+            self.health -= 1
+    
+    def renderUI(self):
+        scaledPointer = pygame.transform.scale(self.pointer, (500,500))
+        self.screen.blit(scaledPointer,(Constant.WIDTH // 2, 80))
+
+        height = 20
+
+        #health
+        healthScale = 20
+        healthx, healthy = 10, 10
+
+        #base
+        pygame.draw.rect(self.screen, (0, 0, 0), (healthx, healthy, self.Fullhealth * healthScale,height ))
+        #health
+        pygame.draw.rect(self.screen, (200, 50, 50), (healthx, healthy, self.health * healthScale,height ))
+
+        #energy bar
+        scale = 0.1
+        #start point
+        x,y = 10, 35
+        
+
+        #base
+        pygame.draw.rect(self.screen, (0, 0, 0), (x, y, self.energyBarMax * scale,height ))
+        #energy
+        pygame.draw.rect(self.screen, (0, 200, 255), (x, y, self.energy * scale,height ))
+
+        #bullet gride
+        bulletNum = self.energyBarMax // self.bulletCost
+        for i in range(bulletNum):
+
+            pygame.draw.line(self.screen, 
+                             (0, 0, 0), 
+                             ((i + 1) * self.bulletCost * scale + x, y),
+                             ((i + 1) * self.bulletCost * scale + x, y + height), 2 )
+
     def inputMove(self, enemy):
+        self.health = max(0, self.health)
         keys = pygame.key.get_pressed()
         dx = self.speed * math.cos(math.radians(self.angle)) # back and forth movement
         dy = self.speed * math.sin(math.radians(self.angle))
@@ -155,7 +202,7 @@ class Player():
                 self.fireOldTime = pygame.time.get_ticks()
                 self.energy -= self.bulletCost
                 for e in enemy:
-                    print(e.didGotShot())
+                    e.didGotShot(self.damage)
                 
 
         self.angle = self.angle
@@ -165,28 +212,7 @@ class Player():
 
         
 
+        
+
     
-    def renderUI(self):
-        scaledPointer = pygame.transform.scale(self.pointer, (500,500))
-        self.screen.blit(scaledPointer,(Constant.WIDTH // 2, 80))
-
-        #energy bar
-        scale = 0.1
-        #start point
-        x,y = 10, 10
-        height = 20
-
-        #base
-        pygame.draw.rect(self.screen, (0, 0, 0), (x, y, self.energyBarMax * scale,height ))
-        #energy
-        pygame.draw.rect(self.screen, (0, 200, 255), (x, y, self.energy * scale,height ))
-
-        #bullet gride
-        bulletNum = self.energyBarMax // self.bulletCost
-        for i in range(bulletNum):
-
-            pygame.draw.line(self.screen, 
-                             (0, 0, 0), 
-                             ((i + 1) * self.bulletCost * scale + x, y),
-                             ((i + 1) * self.bulletCost * scale + x, y + height), 2 )
 

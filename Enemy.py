@@ -16,6 +16,7 @@ class Enemy:
         self.color = (0, 255, 0)
         self.width = 20
         self.image = "place holder"
+
         self.fullhealth = 5
         self.health = self.fullhealth
 
@@ -33,12 +34,14 @@ class Enemy:
         self.anglePtoStart = 0
         self.anglePtoEnd = 0
 
-        self.speed = 0
+        self.speed =2.5
 
         self.deeplist = "xxx"
 
 
     def update(self):
+       
+        self.health = max(0,self.health)
         self.angle = self.player.angle + 90
         halfWidth = self.width / 2
         rad = math.radians(self.angle)
@@ -59,9 +62,12 @@ class Enemy:
         self.midY += self.speed * math.sin(angle)
         if not self.map.canYouMove(self.midX, self.midY):
                 self.midY -= self.speed * math.sin(angle)
+
+        if self.getDisToPlayer() < 10:
+            self.player.getHit()
         
 
-    def didGotShot(self):
+    def didGotShot(self, damage):
         playerEndx = self.player.x + math.cos(math.radians(self.player.angle)) * self.player.viewDis
         playerEndy = self.player.y + math.sin(math.radians(self.player.angle)) * self.player.viewDis
         #player angle line and enemy line
@@ -77,7 +83,7 @@ class Enemy:
             return False
         
         if 0 < t < 1:
-            self.health -= 1
+            self.health -= damage
             return True
         return False
 
@@ -160,7 +166,7 @@ class Enemy:
         # self.screen.blit(scaled, (int(startPoint), int(HEIGHT // 2 - eh // 2)))
 
         #health bar
-        healthSurface = pygame.Surface((int(widthRec * self.health / self.fullhealth), int(eh * 0.05)), pygame.SRCALPHA)
+        healthSurface = pygame.Surface((int(widthRec * max(0,self.health) / self.fullhealth), int(eh * 0.05)), pygame.SRCALPHA)
         healthSurface.set_alpha(alph)
         pygame.draw.rect(healthSurface, (0, 255,0), healthSurface.get_rect())
         self.screen.blit(healthSurface, (int(startPoint), int(HEIGHT // 2 - eh // 2 - eh * 0.05)))

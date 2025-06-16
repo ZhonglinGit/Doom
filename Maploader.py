@@ -2,6 +2,7 @@ import json
 import random
 import EnemyMore
 import EnemyMore.Devil
+import EnemyMore.Ghost
 import Map
 
 
@@ -36,7 +37,13 @@ class Maploader():
                                                 self.player,
                                                 map,
                                                 i["x"], i["y"], 
-                                                name, )
+                                                name)
+            if i["Type"] == "Ghost":
+                eneny = EnemyMore.Ghost.Ghost(self.screen,
+                                                self.player,
+                                                map,
+                                                i["x"], i["y"], 
+                                                name)
             #more enemy
 
             bigBeautifulList.append(eneny)
