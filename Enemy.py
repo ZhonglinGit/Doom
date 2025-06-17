@@ -34,11 +34,12 @@ class Enemy:
         self.anglePtoStart = 0
         self.anglePtoEnd = 0
 
-        self.speed =2.5
+        self.speed =0
 
         self.deeplist = "xxx"
 
-        self.visible = False
+        self.visible = True
+        self.canGetHit = True
 
 
     def update(self):
@@ -62,6 +63,8 @@ class Enemy:
         
 
     def didGotShot(self, damage):
+        if not self.canGetHit:
+            return
         playerEndx = self.player.x + math.cos(math.radians(self.player.angle)) * self.player.viewDis
         playerEndy = self.player.y + math.sin(math.radians(self.player.angle)) * self.player.viewDis
         #player angle line and enemy line
@@ -81,6 +84,8 @@ class Enemy:
             return True
         return False
     def didGotShotLeft(self, damage):
+        if not self.canGetHit:
+            return
         # left 1/3
                                                                                         #1/2 - 1/3 = 1/6
         playerEndx = self.player.x + math.cos(math.radians(self.player.angle - self.player.fieldOfView /6)) * self.player.viewDis
@@ -103,6 +108,8 @@ class Enemy:
         return False
     
     def didGotShotRight(self, damage):
+        if not self.canGetHit:
+            return
         # right 1/3
                                                                                         #1/2 - 1/3 = 1/6
         playerEndx = self.player.x + math.cos(math.radians(self.player.angle + self.player.fieldOfView /6)) * self.player.viewDis
@@ -182,6 +189,8 @@ class Enemy:
         return math.hypot(self.midX - self.player.x, self.midY - self.player.y)
 
     def render(self, depthList):
+        if not self.visible:
+            return
         self.deeplist = depthList
         startPoint, widthRec = self.getWhatToDesplay()
         if startPoint is None:
@@ -207,8 +216,10 @@ class Enemy:
         
         healthSurface.set_alpha(alph)
 
-        pygame.draw.rect(healthSurface, (0, 255,0), healthSurface.get_rect())
-        self.screen.blit(healthSurface, (int(startPoint), int(HEIGHT // 2 - eh // 2 - eh * 0.05)))
+        if 0 <= startPoint < len(depthList):
+            if dis < depthList[startPoint]:
+                pygame.draw.rect(healthSurface, (0, 255,0), healthSurface.get_rect())
+                self.screen.blit(healthSurface, (int(startPoint), int(HEIGHT // 2 - eh // 2 - eh * 0.05)))
 
         for i in range(widthRec):
             x = startPoint + i

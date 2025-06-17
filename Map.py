@@ -17,7 +17,9 @@ class Map():
         mapX = int(x / Constant.SPACE)
         mapY = int(y / Constant.SPACE)
         
-      
+        if mapX > self.width-1 or mapY > self.height-1:
+            return True
+
         if self.map[mapY][mapX] == 1:
             return False
 

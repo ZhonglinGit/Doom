@@ -25,7 +25,7 @@ class Player():
         self.invincibilityTime = 500
         self.healthTime = 0
 
-        self.fireGap = 100  #ms
+        self.fireGap = 500  #ms
         self.damage = 1
         self.fireOldTime = 0
         self.map = "xxx"

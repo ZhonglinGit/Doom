@@ -3,6 +3,7 @@ import random
 import EnemyMore
 import EnemyMore.Devil
 import EnemyMore.Ghost
+import EnemyMore.PhaseReaper
 import Map
 
 
@@ -40,6 +41,12 @@ class Maploader():
                                                 name)
             if i["Type"] == "Ghost":
                 eneny = EnemyMore.Ghost.Ghost(self.screen,
+                                                self.player,
+                                                map,
+                                                i["x"], i["y"], 
+                                                name)
+            if i["Type"] == "PhaseReaper":
+                eneny = EnemyMore.PhaseReaper.PhaseReaper(self.screen,
                                                 self.player,
                                                 map,
                                                 i["x"], i["y"], 

@@ -56,16 +56,25 @@ class PerkChoser():
         clock = pygame.time.Clock()
         buttonHeight = Constant.HEIGHT / self.options
         buttonWidth = 500
+
+        perkList = self.perkList[:]
+        rarePerk = self.rarePerk[:]
         randomPerk = []
 
         for i in range(self.options):
-            if random.random() < 0.8:
-                xxx = random.choice(self.rarePerk)
+            if random.random() < 0.1:
+                xxx = random.choice(rarePerk)
+                rarePerk.remove(xxx)
             else:
-                xxx = random.choice(self.perkList)
+                xxx = random.choice(perkList)
+                perkList.remove(xxx)
 
             randomPerk.append(xxx)
             if xxx.name == "Double shot":
+                    self.rarePerk.remove(xxx)
+            if xxx.name == "Blink Frame":
+                    self.rarePerk.remove(xxx)
+            if xxx.name == "one more option":
                     self.rarePerk.remove(xxx)
 
         stuck = True
