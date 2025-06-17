@@ -10,6 +10,15 @@ class PerkChoser():
         self.player = player
         self.options = 3
 
+        self.rarePerk = [Perk.Perk("TRIPLE DAMAGE",
+                              "damage * 3",
+                              lambda player: setattr(player, "damage", player.damage * 3)),
+                        Perk.Perk("one more option",
+                                "add 1 more perk option",
+                                self.addOneOption)
+                        
+        ]
+
         self.perkList = [Perk.Perk("Max energy up",
                               "increase max energy by 400",
                               lambda player: setattr(player, "energyBarMax", player.energyBarMax + 400)),
@@ -38,7 +47,14 @@ class PerkChoser():
         clock = pygame.time.Clock()
         buttonHeight = Constant.HEIGHT / self.options
         buttonWidth = 500
-        randomPerk = random.sample(self.perkList, self.options)
+        randomPerk = []
+
+        for i in range(self.options):
+            if random.random() < 0.1:
+                xxx = random.choice(self.rarePerk)
+            else:
+                xxx = random.choice(self.perkList)
+            randomPerk.append(xxx)
 
         stuck = True
         while stuck:
@@ -55,10 +71,19 @@ class PerkChoser():
                 rectsList.append(rect)
 
                 #high light when hover 
-                if rect.collidepoint(mouse):
-                    pygame.draw.rect(self.screen, (80, 80, 80), rect)
+                if perk in self.rarePerk:
+                    #gold
+                    if rect.collidepoint(mouse):
+                        pygame.draw.rect(self.screen, (220, 200, 80), rect)
+                    else:
+                        pygame.draw.rect(self.screen, (255, 215, 0), rect)
+                    
                 else:
-                    pygame.draw.rect(self.screen, (50, 50, 50), rect)
+                    #gray
+                    if rect.collidepoint(mouse):
+                        pygame.draw.rect(self.screen, (80, 80, 80), rect)
+                    else:
+                        pygame.draw.rect(self.screen, (50, 50, 50), rect)
                 #a white edge
                 pygame.draw.rect(self.screen, (200, 200, 200), rect, 2)
 
@@ -79,6 +104,8 @@ class PerkChoser():
 
             pygame.display.flip()
             clock.tick(60)
-            
+    
+    def addOneOption(self, _):
+        self.options += 1       
 
 

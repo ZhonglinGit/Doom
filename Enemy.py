@@ -54,15 +54,7 @@ class Enemy:
         self.anglePtoStart = angles.normalize(math.degrees(math.atan2(self.y - self.player.y, self.x - self.player.x)))
         self.anglePtoEnd = angles.normalize(math.degrees(math.atan2(self.endy - self.player.y, self.endx - self.player.x)))
 
-        angle = math.atan2(self.player.y - self.y, self.player.x - self.x)
-        self.midX += self.speed * math.cos(angle)
-        if not self.map.canYouMove(self.midX, self.midY):
-                self.midX -= self.speed * math.cos(angle)
-
-        self.midY += self.speed * math.sin(angle)
-        if not self.map.canYouMove(self.midX, self.midY):
-                self.midY -= self.speed * math.sin(angle)
-
+        
         if self.getDisToPlayer() < 10:
             self.player.getHit()
         

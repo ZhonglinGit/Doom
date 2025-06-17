@@ -68,6 +68,8 @@ class Game:
         self.newLevel()
 
     def newLevel(self):
+        pygame.mouse.set_visible(False)
+        pygame.event.set_grab(True)
         #if = [] -> level1
         #then next level
         self.Player.x = 1.5 * Constant.SPACE
@@ -95,14 +97,10 @@ class Game:
 
             screen.fill((0, 0, 0))
             
-            
             self.render()
             pygame.display.flip()
             # scaledPointer = pygame.transform.scale(self.pointer, (500,500))
             # screen.blit(scaledPointer,(Constant.WIDTH // 2, 80))
-            
-            
-
 
             for e in self.enemyList:
                 if e.health == 0:

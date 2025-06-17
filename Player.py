@@ -135,7 +135,7 @@ class Player():
             if self.energy > self.energyBarMax:
                 self.energy = self.energyBarMax
 
-        print(self.isSpeeding)
+        # print(self.isSpeeding)
 
         # back
         if keys[pygame.K_s]:
