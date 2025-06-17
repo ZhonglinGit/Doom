@@ -9,15 +9,24 @@ class PerkChoser():
         self.screen = screen
         self.player = player
         self.options = 3
+        self.enemyList = []
 
         self.rarePerk = [Perk.Perk("TRIPLE DAMAGE",
                               "damage * 3",
                               lambda player: setattr(player, "damage", player.damage * 3)),
                         Perk.Perk("one more option",
                                 "add 1 more perk option",
-                                self.addOneOption)
+                                self.addOneOption),
+                        Perk.Perk("Double shot",
+                                "add 1 more shot",
+                                lambda player: setattr(player, "twoGun", True)),
+                        Perk.Perk("Blink Frame",
+                                " You're invulnerable during speed up time.",
+                                lambda player: setattr(player, "blinkFrame", True))
                         
         ]
+        #start to end (cope)
+        self.rarePerkCopy = self.rarePerk[:]
 
         self.perkList = [Perk.Perk("Max energy up",
                               "increase max energy by 400",
@@ -50,11 +59,14 @@ class PerkChoser():
         randomPerk = []
 
         for i in range(self.options):
-            if random.random() < 0.1:
+            if random.random() < 0.8:
                 xxx = random.choice(self.rarePerk)
             else:
                 xxx = random.choice(self.perkList)
+
             randomPerk.append(xxx)
+            if xxx.name == "Double shot":
+                    self.rarePerk.remove(xxx)
 
         stuck = True
         while stuck:
@@ -71,7 +83,7 @@ class PerkChoser():
                 rectsList.append(rect)
 
                 #high light when hover 
-                if perk in self.rarePerk:
+                if perk.name in [p.name for p in self.rarePerkCopy]:
                     #gold
                     if rect.collidepoint(mouse):
                         pygame.draw.rect(self.screen, (220, 200, 80), rect)
@@ -105,7 +117,9 @@ class PerkChoser():
             pygame.display.flip()
             clock.tick(60)
     
-    def addOneOption(self, _):
+    def addOneOption(self, xxx):
         self.options += 1       
+
+        
 
 

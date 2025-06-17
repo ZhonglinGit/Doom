@@ -74,6 +74,9 @@ class Game:
         #then next level
         self.Player.x = 1.5 * Constant.SPACE
         self.Player.y = 1.5 * Constant.SPACE
+
+        self.Player.energy = self.Player.energyBarMax
+
         if self.map == "xxx":
             self.map, self.enemyList = self.mapLoader.loadRoomEnemy("level_1")
             self.Player.map = self.map
@@ -81,6 +84,7 @@ class Game:
             self.map, self.enemyList = self.mapLoader.loadRoomEnemy(self.mapLoader.nextLevel)
             self.Player.map = self.map
         self.animation.fade_in_with_circle(lambda: self.render())
+        self.perkChoser.enemyList = self.enemyList
     def main(self):
         self.initGame()
         running = True

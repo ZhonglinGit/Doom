@@ -37,18 +37,40 @@ class Player():
         self.bulletCost = 400
         self.isSpeeding = False
 
+        self.twoGun = False
+        self.blinkFrame = False
+
         self.screen = screen
         self.pointer = pygame.image.load("Doom\picture\point.PNG").convert_alpha()
+        
 
 
     def getHit(self):
-        if pygame.time.get_ticks() - self.healthTime >= self.invincibilityTime:
-            self.healthTime = pygame.time.get_ticks()
-            self.health -= 1
+        if self.blinkFrame:
+            #don'f grt hit when speed up
+            if (pygame.time.get_ticks() - self.healthTime >= self.invincibilityTime) and not self.isSpeeding:
+                self.healthTime = pygame.time.get_ticks()
+                self.health -= 1
+
+        else:
+            if pygame.time.get_ticks() - self.healthTime >= self.invincibilityTime:
+                self.healthTime = pygame.time.get_ticks()
+                self.health -= 1
     
     def renderUI(self):
-        scaledPointer = pygame.transform.scale(self.pointer, (500,500))
-        self.screen.blit(scaledPointer,(Constant.WIDTH // 2, 80))
+        if self.twoGun:
+            pointerleft = pygame.image.load("Doom\picture\pointerleft.PNG").convert_alpha()
+            pointerRight =  pygame.image.load("Doom\picture\pointerright.PNG").convert_alpha()
+
+            pygame.draw.line(self.screen, (0,255,0), (Constant.WIDTH // 3, 0),(Constant.WIDTH // 3 , 300) )
+            pygame.draw.line(self.screen, (0,255,0), (Constant.WIDTH // 3 * 2, 0),(Constant.WIDTH // 3 *  2, 300) )
+
+            self.screen.blit(pointerleft,(Constant.WIDTH // 3 - pointerleft.get_width() +50, 80))
+            self.screen.blit(pointerRight,(Constant.WIDTH // 3 * 2, 80))
+
+        else:
+            scaledPointer = pygame.transform.scale(self.pointer, (500,500))
+            self.screen.blit(scaledPointer,(Constant.WIDTH // 2, 80))
 
         height = 20
 
@@ -197,12 +219,21 @@ class Player():
             pygame.mouse.set_visible(True)
 
         #shot
-        if pygame.mouse.get_pressed(num_buttons=3)[0]:
-            if pygame.time.get_ticks() - self.fireOldTime > self.fireGap and self.energy - self.bulletCost > 0:
-                self.fireOldTime = pygame.time.get_ticks()
-                self.energy -= self.bulletCost
-                for e in enemy:
-                    e.didGotShot(self.damage)
+        if self.twoGun:
+            if pygame.mouse.get_pressed(num_buttons=3)[0]:
+                if pygame.time.get_ticks() - self.fireOldTime > self.fireGap and self.energy - self.bulletCost > 0:
+                    self.fireOldTime = pygame.time.get_ticks()
+                    self.energy -= self.bulletCost
+                    for e in enemy:
+                        e.didGotShotLeft(self.damage)
+                        e.didGotShotRight(self.damage)
+        else:
+            if pygame.mouse.get_pressed(num_buttons=3)[0]:
+                if pygame.time.get_ticks() - self.fireOldTime > self.fireGap and self.energy - self.bulletCost > 0:
+                    self.fireOldTime = pygame.time.get_ticks()
+                    self.energy -= self.bulletCost
+                    for e in enemy:
+                        e.didGotShot(self.damage)
                 
 
         self.angle = self.angle

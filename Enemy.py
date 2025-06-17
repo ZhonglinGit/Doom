@@ -38,6 +38,8 @@ class Enemy:
 
         self.deeplist = "xxx"
 
+        self.visible = False
+
 
     def update(self):
        
@@ -78,7 +80,49 @@ class Enemy:
             self.health -= damage
             return True
         return False
+    def didGotShotLeft(self, damage):
+        # left 1/3
+                                                                                        #1/2 - 1/3 = 1/6
+        playerEndx = self.player.x + math.cos(math.radians(self.player.angle - self.player.fieldOfView /6)) * self.player.viewDis
+        playerEndy = self.player.y + math.sin(math.radians(self.player.angle - self.player.fieldOfView /6)) * self.player.viewDis
+        #player angle line and enemy line
+        p, t = self.whereTwoLineMeet((self.player.x, self.player.y), (playerEndx, playerEndy), (self.x, self.y), (self.endx, self.endy))
 
+        if t == None:
+            #didn't cross
+            return False
+        
+        dis = math.hypot(p[0] - self.player.x, p[1] - self.player.y)
+        if dis > self.deeplist[Constant.WIDTH //3]:
+            #you don't shot through wall only need to check the mid line
+            return False
+        
+        if 0 < t < 1:
+            self.health -= damage
+            return True
+        return False
+    
+    def didGotShotRight(self, damage):
+        # right 1/3
+                                                                                        #1/2 - 1/3 = 1/6
+        playerEndx = self.player.x + math.cos(math.radians(self.player.angle + self.player.fieldOfView /6)) * self.player.viewDis
+        playerEndy = self.player.y + math.sin(math.radians(self.player.angle + self.player.fieldOfView /6)) * self.player.viewDis
+        #player angle line and enemy line
+        p, t = self.whereTwoLineMeet((self.player.x, self.player.y), (playerEndx, playerEndy), (self.x, self.y), (self.endx, self.endy))
+
+        if t == None:
+            #didn't cross
+            return False
+        
+        dis = math.hypot(p[0] - self.player.x, p[1] - self.player.y)
+        if dis > self.deeplist[Constant.WIDTH //3 * 2]:
+            #you don't shot through wall only need to check the mid line
+            return False
+        
+        if 0 < t < 1:
+            self.health -= damage
+            return True
+        return False
     def whereTwoLineMeet(self, a, b, c, d):
         ax, ay = a
         bx, by = b
@@ -158,8 +202,11 @@ class Enemy:
         # self.screen.blit(scaled, (int(startPoint), int(HEIGHT // 2 - eh // 2)))
 
         #health bar
-        healthSurface = pygame.Surface((int(widthRec * max(0,self.health) / self.fullhealth), int(eh * 0.05)), pygame.SRCALPHA)
+        healthSurface = pygame.Surface((int(widthRec * max(0,self.health) / self.fullhealth),
+                                         int(eh * 0.05)), pygame.SRCALPHA)
+        
         healthSurface.set_alpha(alph)
+
         pygame.draw.rect(healthSurface, (0, 255,0), healthSurface.get_rect())
         self.screen.blit(healthSurface, (int(startPoint), int(HEIGHT // 2 - eh // 2 - eh * 0.05)))
 
