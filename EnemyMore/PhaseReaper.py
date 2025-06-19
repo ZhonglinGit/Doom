@@ -72,6 +72,7 @@ class PhaseReaper(Enemy.Enemy):
             self.midY += self.speed * math.sin(angle)
             if not self.map.canYouMove(self.midX, self.midY):
                     self.midY -= self.speed * math.sin(angle)
+
     def render(self, depthList):
         if self.visible:
             super().render(depthList)
@@ -93,8 +94,14 @@ class PhaseReaper(Enemy.Enemy):
         angler = math.radians(self.player.angle)
         disToFly = 100
 
-        x = self.player.x - disToFly * math.cos(angler)
-        y = self.player.y - disToFly * math.sin(angler)
+        skilldir = random.choice([-1,1]) 
+
+        if skilldir == 1:
+             if random.random() < 0.7:
+                  skilldir = -1
+
+        x = self.player.x + disToFly * math.cos(angler) * skilldir
+        y = self.player.y + disToFly * math.sin(angler) * skilldir
 
         if self.map.canYouMove(x,y):
             self.midX = x

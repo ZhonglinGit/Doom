@@ -58,6 +58,9 @@ class Game:
 
         for i in self.enemyList:
             i.render(self.rayCasting.depthList)
+
+        # self.map.drawMinimap(screen, self.Player, self.enemyList)
+
         if not self.mapLoader.nextLevel == "none":
             self.map.drawMinimap(screen, self.Player, self.enemyList)
         self.Player.renderUI()

@@ -64,8 +64,11 @@ class RayCasting():
 
            
             #check on the map
-            if map.map[mapY][mapX] == 1:
-                return [i, map.color]
+            try:
+                if map.map[mapY][mapX] == 1:
+                    return [i, map.color]
+            except:
+                pass
         #black
         return [player.viewDis, (0,0,0)]
 
