@@ -13,31 +13,31 @@ class RayCasting():
         self.screen = screen
         self.depthList = []
 
-    #the point is clock side, check the cross product of each side, 
-    def isInShape(self, point, listOfPoint):
-        pass
+    # #the point is clock side, check the cross product of each side, 
+    # def isInShape(self, point, listOfPoint):
+    #     pass
 
-    def addItem(self,thing):
-        ''' 
-        thing should have x,y, and endx, endy
-        '''
-        self.checkList[thing.name] = thing
+    # def addItem(self,thing):
+    #     ''' 
+    #     thing should have x,y, and endx, endy
+    #     '''
+    #     self.checkList[thing.name] = thing
 
-    def getCoincide(self, player):
-        listRangeToCheck = []
-        for name, enemy in self.checkList.items():
-            #make sure you start from the small num 
-            enemyAngleRange = sorted([enemy.anglePtoStart, enemy.anglePtoEnd])
-            playerFov = sorted([player.angleL, player.angleR])
+    # def getCoincide(self, player):
+    #     listRangeToCheck = []
+    #     for name, enemy in self.checkList.items():
+    #         #make sure you start from the small num 
+    #         enemyAngleRange = sorted([enemy.anglePtoStart, enemy.anglePtoEnd])
+    #         playerFov = sorted([player.angleL, player.angleR])
 
-            #find the range
-            startAngle = max(enemyAngleRange[0],playerFov[0])
-            endAngle = min(enemyAngleRange[1], playerFov[1])
+    #         #find the range
+    #         startAngle = max(enemyAngleRange[0],playerFov[0])
+    #         endAngle = min(enemyAngleRange[1], playerFov[1])
 
-            if startAngle <= endAngle:
-                listRangeToCheck.append([startAngle, endAngle, name])
+    #         if startAngle <= endAngle:
+    #             listRangeToCheck.append([startAngle, endAngle, name])
 
-        return listRangeToCheck
+    #     return listRangeToCheck
                              
     
     def getDep(self, angle, map, player):
@@ -54,7 +54,7 @@ class RayCasting():
         #         enemyThere = True
         #         break
 
-
+       # go through every point on the ray
         for i in range(1, player.viewDis + 1):
             x = player.x + i * xcomp
             y = player.y + i * ycomp
@@ -62,14 +62,11 @@ class RayCasting():
             mapX = int(x / Constant.SPACE)
             mapY = int(y / Constant.SPACE)
 
-            # #remove this part
-            # if enemyThere:
-            #     if self.didHitLine([player.x, player.y], [x, y], [enemyGetHit.x, enemyGetHit.y], [enemyGetHit.endx, enemyGetHit.endy]):
-            #         return [i, enemyGetHit.color]
-
+           
+            #check on the map
             if map.map[mapY][mapX] == 1:
                 return [i, map.color]
-                
+        #black
         return [player.viewDis, (0,0,0)]
 
 
@@ -85,7 +82,7 @@ class RayCasting():
             depth[0] *= math.cos(math.radians(angle - player.angle))  # Correct for fish-eye effect, can optomoze
             self.depthList.append(depth[0])
             wallH = 21000 / depth[0]
-
+            # make the wall further get darker
             color1 = -(depth[1][0] / player.viewDis) * depth[0] + depth[1][0]
             color2 = -(depth[1][1] / player.viewDis) * depth[0] + depth[1][1]
             color3 = -(depth[1][2] / player.viewDis) * depth[0] + depth[1][2]
@@ -94,30 +91,30 @@ class RayCasting():
                             (i, Constant.HEIGHT // 2 - wallH // 2),#start point(top)
                                 (i, Constant.HEIGHT // 2 + wallH // 2),2)#end of line
             
-    def didLineCross(startLine1, endLine1, startLine2, endLine2):
-        l2 = [endLine2[0] - startLine2[0], endLine2[1] - startLine2[1]]
-        l1 = [endLine1[0] - startLine1[0], endLine1[1] - startLine1[1]]
-        #line1 as base
-        s1s2 = [startLine2[0] - startLine1[0],startLine2[1] - startLine1[1]]
-        s1e2 = [endLine2[0] - startLine1[0], endLine2[1] - startLine1[1]]
+    # def didLineCross(startLine1, endLine1, startLine2, endLine2):
+    #     l2 = [endLine2[0] - startLine2[0], endLine2[1] - startLine2[1]]
+    #     l1 = [endLine1[0] - startLine1[0], endLine1[1] - startLine1[1]]
+    #     #line1 as base
+    #     s1s2 = [startLine2[0] - startLine1[0],startLine2[1] - startLine1[1]]
+    #     s1e2 = [endLine2[0] - startLine1[0], endLine2[1] - startLine1[1]]
 
-        l2CrossL1 = numpy.linalg.det(numpy.array([l1, s1s2])) * numpy.linalg.det(numpy.array([l1, s1e2])) <=0
+    #     l2CrossL1 = numpy.linalg.det(numpy.array([l1, s1s2])) * numpy.linalg.det(numpy.array([l1, s1e2])) <=0
         
-        #line2 as base
-        s2s1 = [startLine1[0] - startLine2[0], startLine1[1] - startLine2[1]]
-        s2e1 = [endLine1[0] - startLine2[0], endLine1[1] - startLine2[1]]
+    #     #line2 as base
+    #     s2s1 = [startLine1[0] - startLine2[0], startLine1[1] - startLine2[1]]
+    #     s2e1 = [endLine1[0] - startLine2[0], endLine1[1] - startLine2[1]]
 
-        l1CrossL2 = numpy.linalg.det(numpy.array([l2, s2s1])) * numpy.linalg.det(numpy.array([l2, s2e1])) <= 0
+    #     l1CrossL2 = numpy.linalg.det(numpy.array([l2, s2s1])) * numpy.linalg.det(numpy.array([l2, s2e1])) <= 0
         
-        return l2CrossL1 and l1CrossL2
+    #     return l2CrossL1 and l1CrossL2
     
-    def didHitLine(self, startLine1, endLine1, startLine2, endLine2):
-        '''use when find depth of enemy, field of view check make sure they cross, 
-        l1 is you view, l2 is enemy, this used to find did l2 cut between l1'''
-        l2 = [endLine2[0] - startLine2[0], endLine2[1] - startLine2[1]]
+    # def didHitLine(self, startLine1, endLine1, startLine2, endLine2):
+    #     '''use when find depth of enemy, field of view check make sure they cross, 
+    #     l1 is you view, l2 is enemy, this used to find did l2 cut between l1'''
+    #     l2 = [endLine2[0] - startLine2[0], endLine2[1] - startLine2[1]]
 
-        s2s1 = [startLine1[0] - startLine2[0], startLine1[1] - startLine2[1]]
-        s2e1 = [endLine1[0] - startLine2[0], endLine1[1] - startLine2[1]]
+    #     s2s1 = [startLine1[0] - startLine2[0], startLine1[1] - startLine2[1]]
+    #     s2e1 = [endLine1[0] - startLine2[0], endLine1[1] - startLine2[1]]
 
-        return  numpy.linalg.det(numpy.array([l2, s2s1])) * numpy.linalg.det(numpy.array([l2, s2e1])) <= 0
+    #     return  numpy.linalg.det(numpy.array([l2, s2s1])) * numpy.linalg.det(numpy.array([l2, s2e1])) <= 0
         

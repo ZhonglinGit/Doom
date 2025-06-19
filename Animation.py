@@ -214,6 +214,8 @@ class Animation():
         font = pygame.font.SysFont(None, 32)
         clock = pygame.time.Clock()
 
+        timer = pygame.time.get_ticks()
+
         stuck = True
         while stuck:
             mouse = pygame.mouse.get_pos()
@@ -249,10 +251,10 @@ class Animation():
                     self.screen.blit(quitText, (rect.x + 20, rect.y + buttonHeight /2 - 10))
 
 
-            if click[0] and rectsList[0].collidepoint(mouse):
+            if click[0] and rectsList[0].collidepoint(mouse) and pygame.time.get_ticks() - timer >= 1000:
                 main()
                 
-            if click[0] and rectsList[1].collidepoint(mouse):
+            if click[0] and rectsList[1].collidepoint(mouse) and pygame.time.get_ticks() - timer >= 1000:
                 pygame.quit()
                 exit()
 

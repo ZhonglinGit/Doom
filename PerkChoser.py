@@ -93,47 +93,48 @@ class PerkChoser():
 
             # rectsList = []
             for i, perk in enumerate(randomPerk):
-                #opotion button
-                rect = pygame.Rect(Constant.WIDTH//2 - buttonWidth // 2, 
-                                buttonHeight * 0.1 + i *buttonHeight,
-                                buttonWidth,
-                                buttonHeight * 0.8)
-                # rectsList.append(rect)
+                if self.rarePerk != []:
+                    #opotion button
+                    rect = pygame.Rect(Constant.WIDTH//2 - buttonWidth // 2, 
+                                    buttonHeight * 0.1 + i *buttonHeight,
+                                    buttonWidth,
+                                    buttonHeight * 0.8)
+                    # rectsList.append(rect)
 
-                #high light when hover 
-                if perk.name in [p.name for p in self.rarePerkCopy]:
-                    #gold
-                    if rect.collidepoint(mouse):
-                        pygame.draw.rect(self.screen, (220, 200, 80), rect)
+                    #high light when hover 
+                    if perk.name in [p.name for p in self.rarePerkCopy]:
+                        #gold
+                        if rect.collidepoint(mouse):
+                            pygame.draw.rect(self.screen, (220, 200, 80), rect)
+                        else:
+                            pygame.draw.rect(self.screen, (255, 215, 0), rect)
+                        
                     else:
-                        pygame.draw.rect(self.screen, (255, 215, 0), rect)
-                    
-                else:
-                    #gray
-                    if rect.collidepoint(mouse):
-                        pygame.draw.rect(self.screen, (80, 80, 80), rect)
-                    else:
-                        pygame.draw.rect(self.screen, (50, 50, 50), rect)
-                #a white edge
-                pygame.draw.rect(self.screen, (200, 200, 200), rect, 2)
+                        #gray
+                        if rect.collidepoint(mouse):
+                            pygame.draw.rect(self.screen, (80, 80, 80), rect)
+                        else:
+                            pygame.draw.rect(self.screen, (50, 50, 50), rect)
+                    #a white edge
+                    pygame.draw.rect(self.screen, (200, 200, 200), rect, 2)
 
-                nameText = font.render(perk.name,True, (255,255,255))
-                desText = font.render(perk.text, True, (255,255,255))
-                self.screen.blit(nameText,( rect.x + 20, rect.y + buttonHeight /2 - 50))
-                self.screen.blit(desText, (rect.x + 20, rect.y + buttonHeight /2 - 10))
+                    nameText = font.render(perk.name,True, (255,255,255))
+                    desText = font.render(perk.text, True, (255,255,255))
+                    self.screen.blit(nameText,( rect.x + 20, rect.y + buttonHeight /2 - 50))
+                    self.screen.blit(desText, (rect.x + 20, rect.y + buttonHeight /2 - 10))
 
-                if click[0] and rect.collidepoint(mouse):
-                    perk.runable(self.player)
-                    print(perk.name)
-                    stuck = False
+                    if click[0] and rect.collidepoint(mouse):
+                        perk.runable(self.player)
+                        print(perk.name)
+                        stuck = False
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        exit()
 
-            pygame.display.flip()
-            clock.tick(60)
+                pygame.display.flip()
+                clock.tick(60)
     
     def addOneOption(self, xxx):
         self.options += 1       

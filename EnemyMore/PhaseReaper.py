@@ -12,7 +12,7 @@ class PhaseReaper(Enemy.Enemy):
         '''x, y is the map x,y, need to * space'''
         super().__init__(screen, player,map, name)
         self.image = pygame.image.load("Doom\picture\phase.PNG").convert_alpha()
-        self.fullhealth = 1
+        self.fullhealth = 24
         self.health = self.fullhealth
         self.speed = 4
         self.width = 20
@@ -85,6 +85,7 @@ class PhaseReaper(Enemy.Enemy):
         self.image = pygame.image.load("Doom\picture\phaseing.PNG").convert_alpha()
         #for how long is next phase
         self.phaseTime = pygame.time.get_ticks()
+        self.canGetHit = False
     
     def endPhase(self):
         '''apear at the back of the player'''

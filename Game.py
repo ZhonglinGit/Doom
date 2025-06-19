@@ -58,8 +58,8 @@ class Game:
 
         for i in self.enemyList:
             i.render(self.rayCasting.depthList)
-
-        self.map.drawMinimap(screen, self.Player, self.enemyList)
+        if not self.mapLoader.nextLevel == "none":
+            self.map.drawMinimap(screen, self.Player, self.enemyList)
         self.Player.renderUI()
    
         
@@ -69,11 +69,17 @@ class Game:
         self.mapLoader.loadFile()
 
         self.Player.health = self.Player.Fullhealth
-        self.mapLoader.nextLevel = "level_1"
+        self.mapLoader.nextLevel = "level_6"
         self.Player.twoGun = False
         self.Player.blinkFrame = False
         self.perkChoser.options = 3
         self.perkChoser.rarePerk = self.perkChoser.rarePerkCopy.copy()
+
+        self.Player.fireGap = 600
+        self.Player.damage = 1
+        self.Player.energyBarMax = 2000
+        self.Player.energyGain = 10
+        self.Player.viewDis = 240
 
 
         self.newLevel()
