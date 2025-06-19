@@ -98,7 +98,7 @@ class Enemy:
             return False
         
         dis = math.hypot(p[0] - self.player.x, p[1] - self.player.y)
-        if dis > self.deeplist[Constant.WIDTH //3]:
+        if dis > self.deeplist[Constant.WIDTH//2 //3]:
             #you don't shot through wall only need to check the mid line
             return False
         
@@ -122,7 +122,7 @@ class Enemy:
             return False
         
         dis = math.hypot(p[0] - self.player.x, p[1] - self.player.y)
-        if dis > self.deeplist[Constant.WIDTH //3 * 2]:
+        if dis > self.deeplist[Constant.WIDTH//2 //3 * 2]:
             #you don't shot through wall only need to check the mid line
             return False
         

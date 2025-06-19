@@ -25,7 +25,7 @@ class Player():
         self.invincibilityTime = 500
         self.healthTime = 0
 
-        self.fireGap = 100  #ms
+        self.fireGap = 500  #ms
         self.damage = 1
         self.fireOldTime = 0
         self.map = "xxx"
@@ -43,7 +43,9 @@ class Player():
         self.screen = screen
         self.pointer = pygame.image.load("Doom\picture\point.PNG").convert_alpha()
         
-
+        self.shotSound = ""
+        self.mouseFlag = False
+        self.lastM = False
 
     def getHit(self):
         if self.blinkFrame:
@@ -214,10 +216,19 @@ class Player():
         if keys[pygame.K_p]:
             self.angle += self.Aspeed
 
-        if keys[pygame.K_m]:
-            pygame.event.set_grab(False)
-            pygame.mouse.set_visible(True)
+        if keys[pygame.K_m] and not self.lastM:
+            self.mouseFlag = not self.mouseFlag
 
+            if self.mouseFlag :
+                pygame.event.set_grab(False)
+                pygame.mouse.set_visible(True)
+                
+            else:
+                pygame.event.set_grab(True)
+                pygame.mouse.set_visible(False)
+               
+
+        self.lastM = keys[pygame.K_m] 
         #shot
         if self.twoGun:
             if pygame.mouse.get_pressed(num_buttons=3)[0]:
@@ -232,6 +243,7 @@ class Player():
                 if pygame.time.get_ticks() - self.fireOldTime > self.fireGap and self.energy - self.bulletCost > 0:
                     self.fireOldTime = pygame.time.get_ticks()
                     self.energy -= self.bulletCost
+                    self.shotSound.play()
                     for e in enemy:
                         e.didGotShot(self.damage)
                 

@@ -1,7 +1,7 @@
 
 import pygame
 import Constant
-
+clock = pygame.time.Clock()
 class Animation():
     def __init__(self, screen):
         self.screen = screen
@@ -15,7 +15,7 @@ class Animation():
         
         convergen = 200/ radius
         
-        while radius > 0:
+        while radius >= 0:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -89,10 +89,177 @@ class Animation():
             clock.tick(60)
             radius += 10
     def gameOver(self):
-        font = pygame.font.SysFont(None, 32)
-        nameText = font.render("GAME OVER",True, (255,255,255))
+        youDied =  pygame.image.load("Doom\picture\dead.PNG").convert_alpha()
+
+        w = youDied.get_width()
+        h = youDied.get_height()
+
+        stuck = True
+        while stuck:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    stuck = False
+
+        
+
+            click = pygame.mouse.get_pressed()
+                
+            self.screen.blit(youDied,(Constant.WIDTH // 2 - w //2 , Constant.HEIGHT //2 - h //2 ))
+            
+
+            if click[0]:
+                stuck = False
+
+            pygame.display.flip()
+
+            clock.tick(60)
+    def rickThank(self):
+        
+        self.rick()
+        pygame.time.delay(3000)
+        self.thank()
+        pygame.time.delay(3000)
+
+    def gameStart(self):
+        youDied =  pygame.image.load("Doom\picture/title.png").convert_alpha()
+        
+        xx = pygame.transform.scale(youDied, (Constant.WIDTH, Constant.HEIGHT))
+
+        w = xx.get_width()
+        h = xx.get_height()
+
+
+        stuck = True
+        while stuck:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    stuck = False
+
+        
+
+            click = pygame.mouse.get_pressed()
+                
+            # self.screen.blit(youDied,(Constant.WIDTH // 2 - w //2 , Constant.HEIGHT //2 - h //2 ))
+            self.screen.blit(xx,(0,0))
+            
+
+            if click[0]:
+                stuck = False
+
+            pygame.display.flip()
+
+            clock.tick(60)
+    def rick(self):
+        youDied =  pygame.image.load("Doom\picture/rick.jpg").convert_alpha()
+        
+        xx = pygame.transform.scale(youDied, (Constant.WIDTH, Constant.HEIGHT))
+
+        w = xx.get_width()
+        h = xx.get_height()
+
+
+        stuck = True
+        while stuck:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    stuck = False
+
+        
+
+            click = pygame.mouse.get_pressed()
+                
+            # self.screen.blit(youDied,(Constant.WIDTH // 2 - w //2 , Constant.HEIGHT //2 - h //2 ))
+            self.screen.blit(xx,(0,0))
+            
+
+            if click[0]:
+                stuck = False
+
+            pygame.display.flip()
+
+            clock.tick(60)
+    def thank(self):
+        youDied =  pygame.image.load("Doom\picture/thank.PNG").convert_alpha()
+        
+        xx = pygame.transform.scale(youDied, (Constant.WIDTH, Constant.HEIGHT))
+
+
+        stuck = True
+        while stuck:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    stuck = False
+
+        
+
+            click = pygame.mouse.get_pressed()
+                
+            # self.screen.blit(youDied,(Constant.WIDTH // 2 - w //2 , Constant.HEIGHT //2 - h //2 ))
+            self.screen.blit(xx,(0,0))
+            
+            if click[0]:
+                stuck = False
+
+            pygame.display.flip()
+
+            clock.tick(60)
         self.screen.fill((0,0,0))
-        self.screen.blit(nameText,(Constant.WIDTH/2 -100, Constant.HEIGHT/2 - 20))
+    def deadMenu(self, main):
+        pygame.event.set_grab(False)
+        pygame.mouse.set_visible(True)
+
+        font = pygame.font.SysFont(None, 32)
+        clock = pygame.time.Clock()
+
+        stuck = True
+        while stuck:
+            mouse = pygame.mouse.get_pos()
+            click = pygame.mouse.get_pressed()
+
+            buttonHeight = Constant.HEIGHT / 2
+            buttonWidth = 500
+
+            rectsList = []
+            for i in range(2):
+                #opotion button
+                rect = pygame.Rect(Constant.WIDTH//2 - buttonWidth // 2, 
+                                    buttonHeight * 0.1 + i *buttonHeight,
+                                    buttonWidth,
+                                    buttonHeight * 0.8)
+                rectsList.append(rect)
+
+                #high light when hover 
+            
+                #gray
+                if rect.collidepoint(mouse):
+                    pygame.draw.rect(self.screen, (80, 80, 80), rect)
+                else:
+                    pygame.draw.rect(self.screen, (50, 50, 50), rect)
+                #a white edge
+                pygame.draw.rect(self.screen, (200, 200, 200), rect, 2)
+
+                if i == 0:
+                    replayText = font.render("replay",True, (255,255,255))
+                    self.screen.blit(replayText,( rect.x + 20, rect.y + buttonHeight /2 - 50))
+                else:
+                    quitText = font.render("quit", True, (255,255,255))
+                    self.screen.blit(quitText, (rect.x + 20, rect.y + buttonHeight /2 - 10))
+
+
+            if click[0] and rectsList[0].collidepoint(mouse):
+                main()
+                
+            if click[1] and rectsList[1].collidepoint(mouse):
+                pygame.quit()
+                exit()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+
+            pygame.display.flip()
+            clock.tick(60)
 
 
 

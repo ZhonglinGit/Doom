@@ -91,14 +91,14 @@ class PerkChoser():
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
 
-            rectsList = []
+            # rectsList = []
             for i, perk in enumerate(randomPerk):
                 #opotion button
                 rect = pygame.Rect(Constant.WIDTH//2 - buttonWidth // 2, 
                                    buttonHeight * 0.1 + i *buttonHeight,
                                    buttonWidth,
                                    buttonHeight * 0.8)
-                rectsList.append(rect)
+                # rectsList.append(rect)
 
                 #high light when hover 
                 if perk.name in [p.name for p in self.rarePerkCopy]:

@@ -3,9 +3,6 @@
 
 import pygame
 import math
-import numpy
-import sympy
-import EnemyMore.Devil
 import Player
 import Enemy
 import RayCasting
@@ -18,6 +15,13 @@ import cProfile
 import pstats
 
 pygame.init()
+pygame.mixer.init()
+pygame.mixer.music.load("Doom\picture\Beast_Combat Soundtrack_Horror Boss Fight_Intense Battle Music (OST).mp3")
+pygame.mixer.music.set_volume(0.5)  
+pygame.mixer.music.play(-1) 
+
+shoot_sound = pygame.mixer.Sound("Doom\picture/baga.wav")
+
 screen = pygame.display.set_mode((Constant.WIDTH, Constant.HEIGHT), pygame.DOUBLEBUF)
 clock = pygame.time.Clock()
 
@@ -27,9 +31,8 @@ class Game:
         #up date this at new level
         self.map = "xxx"
         self.Player = Player.Player(screen)
-        # self.enemy1 = Enemy.Enemy(screen, self.Player,self.map, "xxx")
-        # self.enemy2 = EnemyMore.Devil.Devil(screen, self.Player,self.map, 300, 300, "xxx")
 
+        self.Player.shotSound = shoot_sound
         self.enemyList = []
 
         self.mapLoader = Maploader.Maploader(screen, self.Player)
@@ -61,9 +64,13 @@ class Game:
    
         
     def initGame(self):
-        # pygame.mouse.set_visible(False)
-        # pygame.event.set_grab(True)
+        self.animation.fade_in_with_circle(lambda: None)
+        self.animation.gameStart()
+        self.Player.health = self.Player.Fullhealth
         self.mapLoader.loadFile()
+
+        self.mapLoader.nextLevel = "level_1"
+
 
         # self.enemy1.image = pygame.image.load("Doom\picture\obamaFix.PNG").convert_alpha()
         # self.pointer = pygame.image.load("Doom\picture\point.PNG").convert_alpha()
@@ -80,17 +87,19 @@ class Game:
 
         self.Player.energy = self.Player.energyBarMax
 
-        if self.map == "xxx":
-            self.map, self.enemyList = self.mapLoader.loadRoomEnemy("level_1")
-            self.Player.map = self.map
-        else:
-            self.map, self.enemyList = self.mapLoader.loadRoomEnemy(self.mapLoader.nextLevel)
-            self.Player.map = self.map
+        # if self.map == "xxx":
+        #     self.map, self.enemyList = self.mapLoader.loadRoomEnemy("level_6")
+        #     self.Player.map = self.map
+        # else:
+        self.map, self.enemyList = self.mapLoader.loadRoomEnemy(self.mapLoader.nextLevel)
+        self.Player.map = self.map
         if self.mapLoader.nextLevel == "none":
             self.animation.fade_in_with_circle_purple(lambda: self.render())
         else:
             self.animation.fade_in_with_circle(lambda: self.render())
         self.perkChoser.enemyList = self.enemyList
+    
+    
     def main(self):
         self.initGame()
         running = True
@@ -116,12 +125,20 @@ class Game:
                 if e.health == 0:
                     self.enemyList.remove(e)
             if self.enemyList == []:
-                self.animation.fade_out_with_circle()
-                self.perkChoser.perkMenu()
-                self.newLevel()
+                if self.mapLoader.nextLevel == "none":
+                    self.animation.rickThank()
+                    
+                    self.animation.deadMenu(self.main)
+
+                else:
+                    self.animation.fade_out_with_circle()
+                    self.perkChoser.perkMenu()
+                    self.newLevel()
 
             if self.Player.health <= 0:
+                self.animation.fade_out_with_circle()
                 self.animation.gameOver()
+                self.animation.deadMenu(self.main)
 
             
                 

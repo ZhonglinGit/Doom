@@ -9,7 +9,7 @@ class Map():
         self.map = mapList
         self.width = len(self.map[0])
         self.height = len(self.map)
-        self.color = (255,0, 0)
+        self.color = (200,0, 0)
     
     def getmap(self):
         return self.map
