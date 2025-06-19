@@ -72,7 +72,7 @@ class Game:
         self.mapLoader.loadFile()
 
         self.Player.health = self.Player.Fullhealth
-        self.mapLoader.nextLevel = "level_6"
+        self.mapLoader.nextLevel = "level_1"
         self.Player.twoGun = False
         self.Player.blinkFrame = False
         self.perkChoser.options = 3

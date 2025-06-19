@@ -14,7 +14,7 @@ class PhaseReaper(Enemy.Enemy):
         self.image = pygame.image.load("Doom\picture\phase.PNG").convert_alpha()
         self.fullhealth = 24
         self.health = self.fullhealth
-        self.speed = 4
+        self.speed = 5
         self.width = 20
         self.midX = x * Constant.SPACE
         self.midY = y * Constant.SPACE
@@ -56,8 +56,23 @@ class PhaseReaper(Enemy.Enemy):
         
         else:
             # normal run time
-            super().update()
-    
+            self.health = max(0,self.health)
+            self.angle = self.player.angle + 90
+            halfWidth = self.width / 2
+            rad = math.radians(self.angle)
+            dx = halfWidth * math.cos(rad)
+            dy = halfWidth * math.sin(rad)
+            self.x = self.midX - dx
+            self.y = self.midY - dy
+            self.endx = self.midX + dx
+            self.endy = self.midY + dy
+            self.anglePtoStart = angles.normalize(math.degrees(math.atan2(self.y - self.player.y, self.x - self.player.x)))
+            self.anglePtoEnd = angles.normalize(math.degrees(math.atan2(self.endy - self.player.y, self.endx - self.player.x)))
+
+            
+            if self.getDisToPlayer() < 10:
+                self.player.getHitBoss()
+        
             angle = math.atan2(self.player.y - self.y, self.player.x - self.x)
             if pygame.time.get_ticks() - self.skillTime >= self.detlaTime:
                 self.skillFlag = not self.skillFlag

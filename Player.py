@@ -58,6 +58,18 @@ class Player():
             if pygame.time.get_ticks() - self.healthTime >= self.invincibilityTime:
                 self.healthTime = pygame.time.get_ticks()
                 self.health -= 1
+
+    def getHitBoss(self):
+        if self.blinkFrame:
+            #don'f grt hit when speed up
+            if (pygame.time.get_ticks() - self.healthTime >= self.invincibilityTime) and not self.isSpeeding:
+                self.healthTime = pygame.time.get_ticks()
+                self.health -= 2
+
+        else:
+            if pygame.time.get_ticks() - self.healthTime >= self.invincibilityTime:
+                self.healthTime = pygame.time.get_ticks()
+                self.health -= 2
     
     def renderUI(self):
         if self.twoGun:
