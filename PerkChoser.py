@@ -71,7 +71,7 @@ class PerkChoser():
         randomPerk = []
 
         for i in range(self.options):
-            if random.random() < 0.1:
+            if random.random() < 0.15:
                 xxx = random.choice(rarePerk)
                 rarePerk.remove(xxx)
             else:
@@ -95,9 +95,9 @@ class PerkChoser():
             for i, perk in enumerate(randomPerk):
                 #opotion button
                 rect = pygame.Rect(Constant.WIDTH//2 - buttonWidth // 2, 
-                                   buttonHeight * 0.1 + i *buttonHeight,
-                                   buttonWidth,
-                                   buttonHeight * 0.8)
+                                buttonHeight * 0.1 + i *buttonHeight,
+                                buttonWidth,
+                                buttonHeight * 0.8)
                 # rectsList.append(rect)
 
                 #high light when hover 

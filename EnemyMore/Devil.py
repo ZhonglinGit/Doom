@@ -9,7 +9,7 @@ class Devil(Enemy.Enemy):
         '''x, y is the map x,y, need to * space'''
         super().__init__(screen, player,map, name)
         self.image = pygame.image.load("Doom\picture\devil\walk\devil_walk1.png").convert_alpha()
-        self.fullhealth = 5
+        self.fullhealth = 1
         self.health = self.fullhealth
         self.speed = 2.5
         self.width = 15

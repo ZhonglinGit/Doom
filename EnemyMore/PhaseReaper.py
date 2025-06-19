@@ -12,7 +12,7 @@ class PhaseReaper(Enemy.Enemy):
         '''x, y is the map x,y, need to * space'''
         super().__init__(screen, player,map, name)
         self.image = pygame.image.load("Doom\picture\phase.PNG").convert_alpha()
-        self.fullhealth = 19
+        self.fullhealth = 1
         self.health = self.fullhealth
         self.speed = 4
         self.width = 20

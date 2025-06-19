@@ -72,11 +72,9 @@ class Game:
         self.mapLoader.nextLevel = "level_1"
         self.Player.twoGun = False
         self.Player.blinkFrame = False
+        self.perkChoser.options = 3
+        self.perkChoser.rarePerk = self.perkChoser.rarePerkCopy.copy()
 
-
-
-        # self.enemy1.image = pygame.image.load("Doom\picture\obamaFix.PNG").convert_alpha()
-        # self.pointer = pygame.image.load("Doom\picture\point.PNG").convert_alpha()
 
         self.newLevel()
 
