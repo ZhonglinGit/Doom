@@ -10,7 +10,7 @@ class Ghost(Enemy.Enemy):
         '''x, y is the map x,y, need to * space'''
         super().__init__(screen, player,map, name)
         self.image = pygame.image.load("Doom\picture\ghost\ghost.png").convert_alpha()
-        self.fullhealth = 1
+        self.fullhealth = 4
         self.health = self.fullhealth
         self.speed = 3
         self.width = 20

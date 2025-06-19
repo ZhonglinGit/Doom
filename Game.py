@@ -66,10 +66,13 @@ class Game:
     def initGame(self):
         self.animation.fade_in_with_circle(lambda: None)
         self.animation.gameStart()
-        self.Player.health = self.Player.Fullhealth
         self.mapLoader.loadFile()
 
+        self.Player.health = self.Player.Fullhealth
         self.mapLoader.nextLevel = "level_1"
+        self.Player.twoGun = False
+        self.Player.blinkFrame = False
+
 
 
         # self.enemy1.image = pygame.image.load("Doom\picture\obamaFix.PNG").convert_alpha()
@@ -156,7 +159,7 @@ if xxx:
 
     xxxx.disable()
     stats = pstats.Stats(xxxx)
-    stats.sort_stats("cumtime")
+    stats.sort_stats("cuntime")
     stats.print_stats()
 else:
     game = Game()

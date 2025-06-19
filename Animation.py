@@ -116,9 +116,9 @@ class Animation():
     def rickThank(self):
         
         self.rick()
-        pygame.time.delay(3000)
+       
         self.thank()
-        pygame.time.delay(3000)
+        
 
     def gameStart(self):
         youDied =  pygame.image.load("Doom\picture/title.png").convert_alpha()
@@ -154,6 +154,8 @@ class Animation():
         
         xx = pygame.transform.scale(youDied, (Constant.WIDTH, Constant.HEIGHT))
 
+        timer = pygame.time.get_ticks()
+
         w = xx.get_width()
         h = xx.get_height()
 
@@ -172,7 +174,7 @@ class Animation():
             self.screen.blit(xx,(0,0))
             
 
-            if click[0]:
+            if click[0] and pygame.time.get_ticks() - timer >= 1000:
                 stuck = False
 
             pygame.display.flip()
@@ -182,6 +184,7 @@ class Animation():
         youDied =  pygame.image.load("Doom\picture/thank.PNG").convert_alpha()
         
         xx = pygame.transform.scale(youDied, (Constant.WIDTH, Constant.HEIGHT))
+        timer = pygame.time.get_ticks()
 
 
         stuck = True
@@ -197,7 +200,7 @@ class Animation():
             # self.screen.blit(youDied,(Constant.WIDTH // 2 - w //2 , Constant.HEIGHT //2 - h //2 ))
             self.screen.blit(xx,(0,0))
             
-            if click[0]:
+            if click[0] and pygame.time.get_ticks() - timer >= 1000:
                 stuck = False
 
             pygame.display.flip()
@@ -249,7 +252,7 @@ class Animation():
             if click[0] and rectsList[0].collidepoint(mouse):
                 main()
                 
-            if click[1] and rectsList[1].collidepoint(mouse):
+            if click[0] and rectsList[1].collidepoint(mouse):
                 pygame.quit()
                 exit()
 

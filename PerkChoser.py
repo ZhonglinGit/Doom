@@ -43,9 +43,9 @@ class PerkChoser():
                     Perk("damage up",
                               "increase damage by 1",
                               lambda player: setattr(player, "damage", player.damage + 1)),
-                    Perk("damage uuuup",
-                              "increase damage by 20%",
-                              lambda player: setattr(player, "damage", player.damage * 1.2)),
+                    Perk("shot speed",
+                              "increase shot speed by 100ms",
+                              lambda player: setattr(player, "fireGap", player.fireGap - 100)),
                     Perk("energy recover up",
                               "enegy recover times 2 ",
                               lambda player: setattr(player, "energyGain", player.energyGain * 2)),
@@ -53,8 +53,8 @@ class PerkChoser():
                               "heal 3 health",
                               lambda player: setattr(player, "health", player.health + 5)),
                     Perk("see further",
-                              "view distance increase by 60",
-                              lambda player: setattr(player, "viewDis", player.viewDis + 60))
+                              "view distance increase by 100",
+                              lambda player: setattr(player, "viewDis", player.viewDis + 100))
                     ]
         
     def perkMenu(self):

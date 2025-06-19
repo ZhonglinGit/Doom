@@ -45,7 +45,7 @@
             [1,1,1,1,1,1,1,1]
         ],
 
-        "enemy": [{"Type": "Ghost", "x": 3, "y": 6}],
+        "enemy": [{"Type": "Ghost", "x": 4, "y": 6}],
         "nextLevel": "level_2"
     }
     ],
@@ -95,7 +95,7 @@
             [1,1,1,1,1,1,1,1]
         ],
 
-        "enemy": [{"Type": "Devil", "x": 4, "y": 1}],
+        "enemy": [{"Type": "Devil", "x": 4, "y": 6}, {"Type": "Ghost", "x": 5, "y": 1}],
         "nextLevel": "level_3"
     }
     ],
