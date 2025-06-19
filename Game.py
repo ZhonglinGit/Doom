@@ -14,12 +14,14 @@ import Maploader
 import Constant
 import PerkChoser
 import Animation
+import cProfile
+import pstats
 
 pygame.init()
 screen = pygame.display.set_mode((Constant.WIDTH, Constant.HEIGHT), pygame.DOUBLEBUF)
 clock = pygame.time.Clock()
 
-
+xxx = False
 class Game:
     def __init__(self):
         #up date this at new level
@@ -40,6 +42,7 @@ class Game:
         self.oldMouse = 0
         self.MouseSensitivity = 0.8
         self.pointer = "xxx"
+        
 
     def update(self):
         for i in self.enemyList:
@@ -58,8 +61,8 @@ class Game:
    
         
     def initGame(self):
-        pygame.mouse.set_visible(False)
-        pygame.event.set_grab(True)
+        # pygame.mouse.set_visible(False)
+        # pygame.event.set_grab(True)
         self.mapLoader.loadFile()
 
         # self.enemy1.image = pygame.image.load("Doom\picture\obamaFix.PNG").convert_alpha()
@@ -83,7 +86,10 @@ class Game:
         else:
             self.map, self.enemyList = self.mapLoader.loadRoomEnemy(self.mapLoader.nextLevel)
             self.Player.map = self.map
-        self.animation.fade_in_with_circle(lambda: self.render())
+        if self.mapLoader.nextLevel == "none":
+            self.animation.fade_in_with_circle_purple(lambda: self.render())
+        else:
+            self.animation.fade_in_with_circle(lambda: self.render())
         self.perkChoser.enemyList = self.enemyList
     def main(self):
         self.initGame()
@@ -116,10 +122,25 @@ class Game:
 
             if self.Player.health <= 0:
                 self.animation.gameOver()
-                
+
             
+                
+            pygame.display.set_caption(str(clock.get_fps()))
             clock.tick(60)
 
         pygame.quit()
-game = Game()
-game.main()    
+    
+if xxx:
+    xxxx = cProfile.Profile()
+    xxxx.enable()
+
+    game = Game()
+    game.main()
+
+    xxxx.disable()
+    stats = pstats.Stats(xxxx)
+    stats.sort_stats("cumtime")
+    stats.print_stats()
+else:
+    game = Game()
+    game.main()

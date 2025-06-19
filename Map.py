@@ -25,9 +25,10 @@ class Map():
 
         return True
     def drawMinimap(self, screen, player, enemyList):
-        scale = 0.15
+        scale = 0.3
         scaleSize = int(Constant.SPACE * scale)
-        startxDis = Constant.WIDTH * (1-scale)
+        
+        startxDis = Constant.WIDTH - self.width * scaleSize
         
         # walls
         #enumerate help you get the index when you go through a list

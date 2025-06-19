@@ -75,7 +75,7 @@ class Enemy:
             return False
         
         dis = math.hypot(p[0] - self.player.x, p[1] - self.player.y)
-        if dis > self.deeplist[Constant.WIDTH //2-1]:
+        if dis > self.deeplist[Constant.WIDTH //4-1]:
             #you don't shot through wall only need to check the mid line
             return False
         
@@ -196,7 +196,10 @@ class Enemy:
         if startPoint is None:
             return
         dis = self.getDisToPlayer()
-        eh = 18000 / (dis +1)
+        # eh = (40 * Constant.HEIGHT) / (dis +1)
+        eh =21000 / (dis +1)
+
+        # print(eh)
         #for future
         # pygame.draw.rect(self.screen, self.color,
         #                  pygame.Rect(int(startPoint), int(HEIGHT // 2 - eh // 2), int(widthRec), int(eh)))
@@ -217,15 +220,15 @@ class Enemy:
         healthSurface.set_alpha(alph)
 
         if 0 <= startPoint < len(depthList):
-            if dis < depthList[startPoint]:
+            if dis < depthList[startPoint //2]:
                 pygame.draw.rect(healthSurface, (0, 255,0), healthSurface.get_rect())
-                self.screen.blit(healthSurface, (int(startPoint), int(HEIGHT // 2 - eh // 2 - eh * 0.05)))
+                self.screen.blit(healthSurface, (int(startPoint), int(Constant.HEIGHT // 2 - eh // 2 - eh * 0.05)))
 
         for i in range(widthRec):
             x = startPoint + i
-            if 0 <= x <= Constant.WIDTH:
-                if dis < depthList[x-1]:
+            if 0 <= x < Constant.WIDTH:
+                if dis < depthList[x//2]:
                     #cut the line on the picture
                     column = scaled.subsurface(pygame.Rect(i, 0, 1, int(eh)))
-                    self.screen.blit(column, (x, HEIGHT // 2 - int(eh) // 2))
+                    self.screen.blit(column, (x, Constant.HEIGHT // 2 - int(eh) // 2))
 

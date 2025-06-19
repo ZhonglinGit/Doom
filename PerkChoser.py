@@ -1,8 +1,17 @@
 
 import pygame
-import Perk
+
 import Constant
 import random
+
+
+class Perk():
+    '''help me creat all the perk, may add more thing'''
+    def __init__(self, name, text, runable):
+        self.name = name
+        self.text = text
+        self.runable = runable
+
 
 class PerkChoser():
     def __init__(self, screen, player):
@@ -11,16 +20,16 @@ class PerkChoser():
         self.options = 3
         self.enemyList = []
 
-        self.rarePerk = [Perk.Perk("TRIPLE DAMAGE",
+        self.rarePerk = [Perk("TRIPLE DAMAGE",
                               "damage * 3",
                               lambda player: setattr(player, "damage", player.damage * 3)),
-                        Perk.Perk("one more option",
+                        Perk("one more option",
                                 "add 1 more perk option",
                                 self.addOneOption),
-                        Perk.Perk("Double shot",
+                        Perk("Double shot",
                                 "add 1 more shot",
                                 lambda player: setattr(player, "twoGun", True)),
-                        Perk.Perk("Blink Frame",
+                        Perk("Blink Frame",
                                 " You're invulnerable during speed up time.",
                                 lambda player: setattr(player, "blinkFrame", True))
                         
@@ -28,22 +37,22 @@ class PerkChoser():
         #start to end (cope)
         self.rarePerkCopy = self.rarePerk[:]
 
-        self.perkList = [Perk.Perk("Max energy up",
+        self.perkList = [Perk("Max energy up",
                               "increase max energy by 400",
                               lambda player: setattr(player, "energyBarMax", player.energyBarMax + 400)),
-                    Perk.Perk("damage up",
+                    Perk("damage up",
                               "increase damage by 1",
                               lambda player: setattr(player, "damage", player.damage + 1)),
-                    Perk.Perk("damage uuuup",
+                    Perk("damage uuuup",
                               "increase damage by 20%",
                               lambda player: setattr(player, "damage", player.damage * 1.2)),
-                    Perk.Perk("energy recover up",
+                    Perk("energy recover up",
                               "enegy recover times 2 ",
                               lambda player: setattr(player, "energyGain", player.energyGain * 2)),
-                    Perk.Perk("quick heal",
+                    Perk("quick heal",
                               "heal 3 health",
                               lambda player: setattr(player, "health", player.health + 5)),
-                    Perk.Perk("see further",
+                    Perk("see further",
                               "view distance increase by 60",
                               lambda player: setattr(player, "viewDis", player.viewDis + 60))
                     ]

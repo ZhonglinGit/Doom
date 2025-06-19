@@ -30,7 +30,7 @@ class Animation():
 
             pygame.display.flip()
             clock.tick(60)
-            radius -= 10
+            radius -= 20
     def fade_in_with_circle(self, background):
         '''background is render'''
         clock = pygame.time.Clock()
@@ -58,6 +58,35 @@ class Animation():
 
             pygame.display.flip()
             clock.tick(60)
+            radius += 20
+        
+    def fade_in_with_circle_purple(self, background):
+        '''background is render'''
+        clock = pygame.time.Clock()
+        #circle
+        width, height = self.screen.get_size()
+        center = (width/2,height/2 )
+        radius = 0
+        radisMax = max(width, height) /2
+        
+        convergen = 255/ radisMax
+        
+        while radius < radisMax:
+            background()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+            # self.screen.fill((0,0,255))
+            blackSurface = pygame.Surface(self.screen.get_size(), pygame.SRCALPHA)
+            blackSurface.fill((160,60,190, max(0,255 - radius * convergen) ))
+            # blackSurface.fill((0,0,0,255 ))
+            pygame.draw.circle(blackSurface,(0,0,0,0), center, int(radius))
+          
+            self.screen.blit(blackSurface,(0,0))
+
+            pygame.display.flip()
+            clock.tick(60)
             radius += 10
     def gameOver(self):
         font = pygame.font.SysFont(None, 32)
@@ -69,11 +98,11 @@ class Animation():
 
 
 
-pygame.init()
-screen = pygame.display.set_mode((Constant.WIDTH, Constant.HEIGHT), pygame.DOUBLEBUF)
-a = Animation(screen)
-def xxx():
-    pass
+# pygame.init()
+# screen = pygame.display.set_mode((Constant.WIDTH, Constant.HEIGHT), pygame.DOUBLEBUF)
+# a = Animation(screen)
+# def xxx():
+#     pass
 
-# a.fade_in_with_circle(lambda: xxx())
-a.gameOver
+# a.fade_in_with_circle_purple(lambda: xxx())
+# # a.gameOver

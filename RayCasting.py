@@ -78,7 +78,7 @@ class RayCasting():
         self.depthList = []
         # RangeOfAngleForE = self.getCoincide(player)
         # a function in enemy called draw here
-        for i in range(Constant.WIDTH):
+        for i in range(0,Constant.WIDTH, 2):
             angle = startA + i * player.deltaAngle
             depth = self.getDep(angle, map, player)
             
@@ -92,7 +92,7 @@ class RayCasting():
 
             pygame.draw.line(self.screen, (color1, color2, color3), 
                             (i, Constant.HEIGHT // 2 - wallH // 2),#start point(top)
-                                (i, Constant.HEIGHT // 2 + wallH // 2))#end of line
+                                (i, Constant.HEIGHT // 2 + wallH // 2),2)#end of line
             
     def didLineCross(startLine1, endLine1, startLine2, endLine2):
         l2 = [endLine2[0] - startLine2[0], endLine2[1] - startLine2[1]]
@@ -121,9 +121,3 @@ class RayCasting():
 
         return  numpy.linalg.det(numpy.array([l2, s2s1])) * numpy.linalg.det(numpy.array([l2, s2e1])) <= 0
         
-   
-    #???
-    def quickCheck(self, startLine1, endLine1, startLine2, endLine2):
-        xxx = max(startLine1[0], endLine1[0]) < max(startLine2[0], endLine2[0])
-        yyy = max(startLine1[1], endLine1[1]) < max(startLine2[1], endLine2[1])
-        return not xxx and not yyy

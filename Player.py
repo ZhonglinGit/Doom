@@ -25,7 +25,7 @@ class Player():
         self.invincibilityTime = 500
         self.healthTime = 0
 
-        self.fireGap = 500  #ms
+        self.fireGap = 100  #ms
         self.damage = 1
         self.fireOldTime = 0
         self.map = "xxx"
@@ -70,7 +70,7 @@ class Player():
 
         else:
             scaledPointer = pygame.transform.scale(self.pointer, (500,500))
-            self.screen.blit(scaledPointer,(Constant.WIDTH // 2, 80))
+            self.screen.blit(scaledPointer,(Constant.WIDTH // 2, 150))
 
         height = 20
 
