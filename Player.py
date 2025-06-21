@@ -76,8 +76,8 @@ class Player():
             pointerleft = pygame.image.load("Doom\picture\pointerleft.PNG").convert_alpha()
             pointerRight =  pygame.image.load("Doom\picture\pointerright.PNG").convert_alpha()
 
-            pygame.draw.line(self.screen, (0,255,0), (Constant.WIDTH // 3, 0),(Constant.WIDTH // 3 , 300) )
-            pygame.draw.line(self.screen, (0,255,0), (Constant.WIDTH // 3 * 2, 0),(Constant.WIDTH // 3 *  2, 300) )
+            # pygame.draw.line(self.screen, (0,255,0), (Constant.WIDTH // 3, 0),(Constant.WIDTH // 3 , 300) )
+            # pygame.draw.line(self.screen, (0,255,0), (Constant.WIDTH // 3 * 2, 0),(Constant.WIDTH // 3 *  2, 300) )
 
             self.screen.blit(pointerleft,(Constant.WIDTH // 3 - pointerleft.get_width() +50, 80))
             self.screen.blit(pointerRight,(Constant.WIDTH // 3 * 2, 80))
