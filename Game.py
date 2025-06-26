@@ -16,11 +16,11 @@ import pstats
 
 pygame.init()
 pygame.mixer.init()
-pygame.mixer.music.load("Doom\picture\Beast_Combat Soundtrack_Horror Boss Fight_Intense Battle Music (OST).mp3")
+pygame.mixer.music.load("picture/Beast_Combat Soundtrack_Horror Boss Fight_Intense Battle Music (OST).mp3")
 pygame.mixer.music.set_volume(0.5)  
 pygame.mixer.music.play(-1) 
 
-shoot_sound = pygame.mixer.Sound("Doom\picture/baga.wav")
+shoot_sound = pygame.mixer.Sound("picture/baga.wav")
 
 screen = pygame.display.set_mode((Constant.WIDTH, Constant.HEIGHT), pygame.DOUBLEBUF)
 clock = pygame.time.Clock()

@@ -11,7 +11,7 @@ class PhaseReaper(Enemy.Enemy):
     def __init__(self, screen, player,map, x, y, name):
         '''x, y is the map x,y, need to * space'''
         super().__init__(screen, player,map, name)
-        self.image = pygame.image.load("Doom\picture\phase.PNG").convert_alpha()
+        self.image = pygame.image.load("picture/phase.PNG").convert_alpha()
         self.fullhealth = 24
         self.health = self.fullhealth
         self.speed = 5
@@ -98,7 +98,7 @@ class PhaseReaper(Enemy.Enemy):
         self.isPhasing = True
         #for how long this will last
         self.phaseStartTime = pygame.time.get_ticks()
-        self.image = pygame.image.load("Doom\picture\phaseing.PNG").convert_alpha()
+        self.image = pygame.image.load("picture/phaseing.PNG").convert_alpha()
         #for how long is next phase
         self.phaseTime = pygame.time.get_ticks()
         self.canGetHit = False
@@ -124,7 +124,7 @@ class PhaseReaper(Enemy.Enemy):
         else:
              self.midX, self.midY = self.randomGoodPos()
 
-        self.image = pygame.image.load("Doom\picture\phase.PNG").convert_alpha()
+        self.image = pygame.image.load("picture/phase.PNG").convert_alpha()
         self.canGetHit = True
         self.isPhasing = False
         self.visible = True

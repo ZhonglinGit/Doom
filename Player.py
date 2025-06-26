@@ -41,8 +41,8 @@ class Player():
         self.blinkFrame = False
 
         self.screen = screen
-        self.pointer = pygame.image.load("Doom\picture\point.PNG").convert_alpha()
-        
+        self.pointer = pygame.image.load("picture/point.PNG").convert_alpha()
+
         self.shotSound = ""
         self.mouseFlag = False
         self.lastM = False
@@ -73,8 +73,8 @@ class Player():
     
     def renderUI(self):
         if self.twoGun:
-            pointerleft = pygame.image.load("Doom\picture\pointerleft.PNG").convert_alpha()
-            pointerRight =  pygame.image.load("Doom\picture\pointerright.PNG").convert_alpha()
+            pointerleft = pygame.image.load("picture/pointerleft.PNG").convert_alpha()
+            pointerRight =  pygame.image.load("picture/pointerright.PNG").convert_alpha()
 
             # pygame.draw.line(self.screen, (0,255,0), (Constant.WIDTH // 3, 0),(Constant.WIDTH // 3 , 300) )
             # pygame.draw.line(self.screen, (0,255,0), (Constant.WIDTH // 3 * 2, 0),(Constant.WIDTH // 3 *  2, 300) )

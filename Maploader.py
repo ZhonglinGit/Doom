@@ -16,7 +16,7 @@ class Maploader():
         self.nextLevel = "level_1"
 
     def loadFile(self):
-        with open("Doom/room.json") as f:           
+        with open("room.json") as f:           
             return json.load(f)
         
     def loadRoomEnemy(self, level):

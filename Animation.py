@@ -89,7 +89,7 @@ class Animation():
             clock.tick(60)
             radius += 10
     def gameOver(self):
-        youDied =  pygame.image.load("Doom\picture\dead.PNG").convert_alpha()
+        youDied =  pygame.image.load("picture/dead.PNG").convert_alpha()
 
         w = youDied.get_width()
         h = youDied.get_height()
@@ -121,8 +121,8 @@ class Animation():
         
 
     def gameStart(self):
-        youDied =  pygame.image.load("Doom\picture/title.png").convert_alpha()
-        
+        youDied =  pygame.image.load("picture/title.png").convert_alpha()
+
         xx = pygame.transform.scale(youDied, (Constant.WIDTH, Constant.HEIGHT))
 
         w = xx.get_width()
@@ -150,8 +150,8 @@ class Animation():
 
             clock.tick(60)
     def rick(self):
-        youDied =  pygame.image.load("Doom\picture/rick.jpg").convert_alpha()
-        
+        youDied =  pygame.image.load("picture/rick.jpg").convert_alpha()
+
         xx = pygame.transform.scale(youDied, (Constant.WIDTH, Constant.HEIGHT))
 
         timer = pygame.time.get_ticks()
@@ -181,8 +181,8 @@ class Animation():
 
             clock.tick(60)
     def thank(self):
-        youDied =  pygame.image.load("Doom\picture/thank.PNG").convert_alpha()
-        
+        youDied =  pygame.image.load("picture/thank.PNG").convert_alpha()
+
         xx = pygame.transform.scale(youDied, (Constant.WIDTH, Constant.HEIGHT))
         timer = pygame.time.get_ticks()
 
